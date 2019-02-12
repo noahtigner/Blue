@@ -11,6 +11,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainComponent.h"
 
+//using namespace std;
+
 //==============================================================================
 class BlueApplication  : public JUCEApplication
 {
