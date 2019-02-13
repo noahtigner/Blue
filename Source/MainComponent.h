@@ -31,6 +31,7 @@ public:
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
+    void synthChoiceChanged();
     
 
     //==============================================================================
@@ -101,6 +102,9 @@ private:
     SynthVoice* myVoice;
     double lastSampleRate;
      */
+    
+    Label synthChoiceLabel{{}, "Synth: "};
+    ComboBox synthChoice;
     
     
     

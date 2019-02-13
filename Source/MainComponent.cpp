@@ -30,7 +30,7 @@ MainComponent::MainComponent() {
         noiseTargetLevel = noiseSlider.getValue();
         noiseSamplesToTarget = noiseRampLengthSamples;
     };
-    noiseSliderLabel.setText("Noise Level", dontSendNotification);
+    noiseSliderLabel.setText("Level", dontSendNotification);
     
     leftTargetLevel = 0.5f;
     leftSlider.setRange(0.0, 1);
@@ -85,6 +85,18 @@ MainComponent::MainComponent() {
     addAndMakeVisible(&masterSlider);
     addAndMakeVisible(&masterSliderLabel);
     
+    addAndMakeVisible(synthChoiceLabel);
+    synthChoice.addItem("Noise", 1);
+    synthChoice.addItem("Sine", 2);
+    synthChoice.addItem("Square", 3);
+    synthChoice.addItem("Saw", 4);
+    synthChoice.addItem("Triangle", 5);
+    addAndMakeVisible(synthChoice);
+    synthChoice.onChange = [this] {synthChoiceChanged(); };
+    synthChoice.setSelectedId(1);
+    
+    
+    
     
     //createWavetable();  //should now contain 128 samples of a full sine wave cycle
     
@@ -95,7 +107,7 @@ MainComponent::MainComponent() {
     
   
     
-    setSize (600, 150);
+    setSize (600, 300);
 }
 
 MainComponent::~MainComponent() {
@@ -135,59 +147,54 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     auto rightLevel = (float) rightSlider.getValue();
     auto masterLevel = (float) masterSlider.getValue();
     
-    //auto levelScale = noiseLevel * 2.0f;
+    auto levelScale = noiseLevel * 2.0f;
     auto sample = 0;
-    /*
-    //Left Channel
-    auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-    for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-        leftBuffer[sample] = random.nextFloat() * leftLevel * noiseLevel;
-    }
-    
-    //Right Channel
-    auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
-    for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-        rightBuffer[sample] = random.nextFloat() * rightLevel * levelScale - noiseLevel;
-    }*/
-    //========================================================================================
+
     
     #warning TODO
-    //Square
-    auto f = 1.0f; //f, frequency
-    auto A = 0.75f;  //A, peak amplitude
-    auto phase = 0.0f;
-    auto pi = 3.14159265358979323846f;
     
     auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
     auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
-    for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-        
     
-        if(phase<pi) {
-            leftBuffer[sample] = A * leftLevel * noiseLevel * masterLevel;
-            rightBuffer[sample] = A * rightLevel * noiseLevel * masterLevel;
-        }
-        else {
-            leftBuffer[sample] = (0.0f-A) * leftLevel * noiseLevel * masterLevel;
-            rightBuffer[sample] = (0.0f-A) * rightLevel  * noiseLevel * masterLevel;
-        }
+    switch(synthChoice.getSelectedId()) {
         
-        phase = phase + ((2*pi*f) / bufferToFill.numSamples);
-        
-        if(phase>(2*pi)) {
-            phase = phase - (2*pi);
-        }
+        case 1: //Noise
+            for(sample = 0; sample < bufferToFill.numSamples; sample++) {
+                leftBuffer[sample] = random.nextFloat() * leftLevel * (levelScale - noiseLevel) * masterLevel;
+                rightBuffer[sample] = random.nextFloat() * rightLevel * (levelScale - noiseLevel) * masterLevel;
+            }
+            break;
+            
+        case 3: //Square
+            auto f = 1.0f; //f, frequency
+            auto A = 0.75f;  //A, peak amplitude
+            auto phase = 0.0f;
+            auto pi = 3.14159265358979323846f;
+            
+            for(sample = 0; sample < bufferToFill.numSamples; sample++) {
+                if(phase<pi) {
+                    leftBuffer[sample] = A * leftLevel * noiseLevel * masterLevel;
+                    rightBuffer[sample] = A * rightLevel * noiseLevel * masterLevel;
+                }
+                else {
+                    leftBuffer[sample] = (0.0f-A) * leftLevel * noiseLevel * masterLevel;
+                    rightBuffer[sample] = (0.0f-A) * rightLevel  * noiseLevel * masterLevel;
+                }
+                
+                phase = phase + ((2*pi*f) / bufferToFill.numSamples);
+                
+                if(phase>(2*pi)) {
+                    phase = phase - (2*pi);
+                }
+            }
+            break;
     }
+    
+    
     
     
     
     //Wavetable synthesis
-    
-    
-    /*
-    bufferToFill.clearActiveBufferRegion();
-    mySynth.renderNextBlock(bufferToFill, mySynth.midiMessages, 0, bufferToFill.numSamples);
-    */
     
     
 }
@@ -216,11 +223,13 @@ void MainComponent::paint (Graphics& g) {
         Colour (232, 229, 229), //offWhite
         Colour (191, 191, 191), //gray
         Colour (15, 199, 149),  //blue
-        Colour (63, 33, 89)     //purple
+        Colour (63, 33, 89),    //purple
+        Colour (0x1000b00)      //gray
     };
     auto darkGrey = colours[1];
     auto blue = colours[5];
     auto purple = colours[6];
+    auto def = colours[7];
     
     noiseSliderLabel.setColour (Label::textColourId, blue);
     noiseSlider.setColour(Slider::thumbColourId, blue);
@@ -247,7 +256,14 @@ void MainComponent::paint (Graphics& g) {
     masterSlider.setColour(Slider::textBoxTextColourId, blue);
     masterSlider.setColour(Slider::textBoxOutlineColourId, blue);
     
-    
+    synthChoiceLabel.setColour(Label::textColourId, blue);
+    synthChoiceLabel.setColour(Label::outlineColourId, purple);
+    synthChoice.setColour(ComboBox::backgroundColourId, def);
+    synthChoice.setColour(ComboBox::textColourId, blue);
+    synthChoice.setColour(ComboBox::outlineColourId, purple);
+    synthChoice.setColour(ComboBox::buttonColourId, blue);
+    synthChoice.setColour(ComboBox::arrowColourId, blue);
+    synthChoice.setColour(ComboBox::focusedOutlineColourId, purple);
  
     
     
@@ -260,23 +276,47 @@ void MainComponent::resized(){
     // This is called when the MainContentComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-    const int border = 100;
+    
+    const int sliderJustification = 110;
+    const int sliderX = sliderJustification + 40;
+    const int sliderWidth = getWidth() - (sliderJustification + 20);
+    const int sliderHeight = 20;
+    
+    const int labelJustification = 10;
+    const int labelWidth = 90;
+    
+    int y = 10;
     
     
-    noiseSlider.setBounds (border, 10, getWidth() - (border+10), 20);   //x, y, width, height
-    noiseSliderLabel.setBounds (10, 10, 90, 20);
+    //synthChoice.setBounds(labelJustification, 30, labelWidth, sliderHeight);
+    //synthChoiceLabel.attachToComponent(&synthChoice, false);
+    //synthChoiceLabel.setBounds(labelJustification, 10, labelWidth, sliderHeight);
+    synthChoice.setBounds(labelJustification, y, labelWidth, sliderHeight);
     
-    leftSlider.setBounds(border, 40,  getWidth() - (border+10), 20);
-    leftSliderLabel.setBounds(10, 40, 90, 20);
+    noiseSlider.setBounds (sliderX, y, sliderWidth-40, sliderHeight);   //x, y, width, height
+    noiseSliderLabel.setBounds (sliderJustification, y, 40, sliderHeight);
+    
+    leftSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
+    leftSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
+    
+    rightSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
+    rightSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
+    
+    masterSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
+    masterSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
+    
+    /*
+    leftSlider.setBounds(border, 90,  getWidth() - (border+10), 20);
+    leftSliderLabel.setBounds(10, 90, 90, 20);
     
     //rightSlider.setBounds(border, 70, 20, 100);
-    rightSlider.setBounds(border, 70, getWidth() - (border+10), 20);
-    rightSliderLabel.setBounds(10, 70, 90, 20);
+    rightSlider.setBounds(border, 120, getWidth() - (border+10), 20);
+    rightSliderLabel.setBounds(10, 120, 90, 20);
  
     
-    masterSlider.setBounds(border, 100, getWidth() - (border+10), 20);
-    masterSliderLabel.setBounds(10, 100, 90, 20);
-    
+    masterSlider.setBounds(border, 150, getWidth() - (border+10), 20);
+    masterSliderLabel.setBounds(10, 150, 90, 20);
+    */
     
     /*
     //Vertical
@@ -292,9 +332,23 @@ void MainComponent::resized(){
     rightSlider.setBounds(70, 10, 20, getHeight() - (border+10));
     rightSliderLabel.setBounds(10, 70, 90, 20);
     */
+    
+    
+    
 
 }
 void MainComponent::timerCallback() {
     Logger::getCurrentLogger()->writeToLog ("here");
+}
+
+void MainComponent::synthChoiceChanged() {
+    switch(synthChoice.getSelectedId()) {
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
 }
    
