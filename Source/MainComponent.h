@@ -8,8 +8,10 @@
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
-//#include "SynthSound.h"
-//#include "SynthVoice.h"
+#include "Tree.h"
+#include "SynthSource.h"
+#include "SineWave.h"
+
 
 //==============================================================================
 /*
@@ -17,10 +19,17 @@
     your controls and content.
 */
 
+//==============================================================================
+
+
+
+
 class MainComponent   : public AudioAppComponent,
                         public Slider::Listener,
                         private Timer
 {
+   
+    
 public:
     //==============================================================================
     MainComponent();
@@ -32,6 +41,7 @@ public:
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
     void synthChoiceChanged();
+    
     
 
     //==============================================================================
@@ -47,11 +57,10 @@ public:
         else if(slider == &rightSlider) {
             leftSlider.setValue(1.0 - rightSlider.getValue());
         }
-        /*
+        
         else if(slider == &masterSlider) {
-            rightSlider.setValue(masterSlider.getValue()/2);
-            //leftSlider.setValue(leftSlider.getValue() - (1.0 - masterSlider.getValue()));
-        } */
+            master = masterSlider.getValue();
+        }
     }
      
     
@@ -106,9 +115,24 @@ private:
     Label synthChoiceLabel{{}, "Synth: "};
     ComboBox synthChoice;
     
+    SynthAudioSource synthAudioSource;
+    MidiKeyboardState keyboardState;
+    MidiKeyboardComponent keyboardComponent;
+    
+    ComboBox midiInputList;
+    Label midiInputListLabel;
+    int lastInputIndex = 0;
+    
     
     
     void timerCallback() override;
+    void setMidiInput(int index);
+    
+    int master;
+    
+
+    
+    
     
     //==========================================================================
     

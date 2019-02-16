@@ -7,18 +7,26 @@
 */
 
 #include "MainComponent.h"
+#include "SynthSource.h"
+#include "SineWave.h"
 
 //==============================================================================
 
 
 
 //==============================================================================
-MainComponent::MainComponent() {
+MainComponent::MainComponent(): synthAudioSource  (keyboardState),
+keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+{
     // specify the number of input and output channels that we want to open
     setAudioChannels (0, 2);    //no in, 2 out
     
+    /*
+    static Identifier myNodeType ("MyNode"); // pre-create an Identifier
+    ValueTree myNode (myNodeType);           // This is a valid node, of type "MyNode"
+    */
     
-                                    
+  
                                     
                                     
     //noiseTargetLevel = 0.125;
@@ -67,10 +75,17 @@ MainComponent::MainComponent() {
         masterSamplesToTarget = masterRampLengthSamples;
     };
     masterSlider.addListener(this);
+    //masterSlider.addListener(&synthAudioSource);
     masterSliderLabel.setText("Master Level", dontSendNotification);
     
+    synthAudioSource.masterSlider = &masterSlider;
+    masterSlider.addListener(&synthAudioSource);
     
     
+    /*
+    static Identifier propertyName ("master");
+    myNode.setProperty (propertyName, &masterSlider, nullptr);
+    */
     
     addAndMakeVisible (&noiseSlider);
     addAndMakeVisible (&noiseSliderLabel);
@@ -105,7 +120,27 @@ MainComponent::MainComponent() {
     // Make sure you set the size of the component after
     // you add any child components.
     
-  
+    addAndMakeVisible (keyboardComponent);
+    //addAndMakeVisible (midiInputListLabel);
+    //midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
+    //midiInputListLabel.attachToComponent (&midiInputList, true);
+    //addAndMakeVisible (midiInputList);
+    //midiInputList.setTextWhenNoChoicesAvailable ("No MIDI Inputs Enabled");
+    auto midiInputs = MidiInput::getDevices();
+    //midiInputList.addItemList (midiInputs, 1);
+    midiInputList.onChange = [this] { setMidiInput (midiInputList.getSelectedItemIndex()); };
+    for (auto midiInput : midiInputs)
+    {
+        if (deviceManager.isMidiInputEnabled (midiInput))
+        {
+            setMidiInput (midiInputs.indexOf (midiInput));
+            break;
+        }
+    }
+    if (midiInputList.getSelectedId() == 0)
+        setMidiInput (0);
+    //keyboardComponent.setAvailableRange(24, 103);
+    
     
     setSize (600, 300);
 }
@@ -135,12 +170,13 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
    
     // For more details, see the help for AudioProcessor::prepareToPlay()
 
-    
+    synthAudioSource.prepareToPlay (samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) {
     // Your audio-processing code goes here!
     
+    /*
     //Noise Block
     auto noiseLevel = (float) noiseSlider.getValue();
     auto leftLevel = (float) leftSlider.getValue();
@@ -189,14 +225,16 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
             }
             break;
     }
+    synthChoice.setItemEnabled(2, false);
+    synthChoice.setItemEnabled(4, false);
+    synthChoice.setItemEnabled(5, false);
     
-    
-    
-    
+    */
     
     //Wavetable synthesis
     
-    
+    //synthAudioSource.setLevel((float) noiseSlider.getValue(), (float) masterSlider.getValue());
+    synthAudioSource.getNextAudioBlock (bufferToFill);
 }
 
 
@@ -207,6 +245,8 @@ void MainComponent::releaseResources() {
     Logger::getCurrentLogger()->writeToLog ("Releasing audio resources");
     
     // For more details, see the help for AudioProcessor::releaseResources()
+    
+    synthAudioSource.releaseResources();
 }
 
 //==============================================================================
@@ -226,7 +266,10 @@ void MainComponent::paint (Graphics& g) {
         Colour (63, 33, 89),    //purple
         Colour (0x1000b00)      //gray
     };
+    auto black = colours[0];
     auto darkGrey = colours[1];
+    //auto white = colours[2];
+    auto offWhite = colours[3];
     auto blue = colours[5];
     auto purple = colours[6];
     auto def = colours[7];
@@ -265,7 +308,10 @@ void MainComponent::paint (Graphics& g) {
     synthChoice.setColour(ComboBox::arrowColourId, blue);
     synthChoice.setColour(ComboBox::focusedOutlineColourId, purple);
  
-    
+    keyboardComponent.setColour(MidiKeyboardComponent::whiteNoteColourId, darkGrey);
+    keyboardComponent.setColour(MidiKeyboardComponent::blackNoteColourId, black);
+    keyboardComponent.setColour(MidiKeyboardComponent::upDownButtonBackgroundColourId, black);
+    keyboardComponent.setColour(MidiKeyboardComponent::keyDownOverlayColourId, offWhite);
     
     g.fillAll(darkGrey);   //Set Background
 }
@@ -305,34 +351,10 @@ void MainComponent::resized(){
     masterSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
     masterSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
     
-    /*
-    leftSlider.setBounds(border, 90,  getWidth() - (border+10), 20);
-    leftSliderLabel.setBounds(10, 90, 90, 20);
+
     
-    //rightSlider.setBounds(border, 70, 20, 100);
-    rightSlider.setBounds(border, 120, getWidth() - (border+10), 20);
-    rightSliderLabel.setBounds(10, 120, 90, 20);
- 
-    
-    masterSlider.setBounds(border, 150, getWidth() - (border+10), 20);
-    masterSliderLabel.setBounds(10, 150, 90, 20);
-    */
-    
-    /*
-    //Vertical
-    noiseSlider.setSliderStyle(Slider::LinearVertical);
-    noiseSlider.setBounds(10, 10, 20, getHeight() - (border+10));
-    noiseSliderLabel.setBounds(10, 10, 90, 20);
-    
-    leftSlider.setSliderStyle(Slider::LinearVertical);
-    leftSlider.setBounds(40, 10,  20, getHeight() - (border+10));
-    leftSliderLabel.setBounds(10, 40, 90, 20);
-    
-    rightSlider.setSliderStyle(Slider::LinearVertical);
-    rightSlider.setBounds(70, 10, 20, getHeight() - (border+10));
-    rightSliderLabel.setBounds(10, 70, 90, 20);
-    */
-    
+    //midiInputList.setBounds(200, y+=30, getWidth() - 210, 20);
+    keyboardComponent.setBounds(labelJustification, y+=30, getWidth() - 20, 100);
     
     
 
@@ -351,4 +373,16 @@ void MainComponent::synthChoiceChanged() {
             break;
     }
 }
-   
+
+void MainComponent::setMidiInput (int index)
+{
+    auto list = MidiInput::getDevices();
+    deviceManager.removeMidiInputCallback (list[lastInputIndex], synthAudioSource.getMidiCollector()); //remove the previous MidiInputCallback object for the previously selected MIDI input device if the user changes the selected device using the combo-box
+    auto newInput = list[index];
+    if (! deviceManager.isMidiInputEnabled (newInput))
+        deviceManager.setMidiInputEnabled (newInput, true);
+    deviceManager.addMidiInputCallback (newInput, synthAudioSource.getMidiCollector()); //add the MidiMessageCollector object from our SynthAudioSource object as a MidiInputCallback object for the specified MIDI input device
+    midiInputList.setSelectedId (index + 1, dontSendNotification);
+    lastInputIndex = index;
+}
+

@@ -10,6 +10,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainComponent.h"
+#include "Tree.h"
+#include "SynthSource.h"
 
 //using namespace std;
 
@@ -68,7 +70,10 @@ public:
                                                     DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar (true);
-            setContentOwned (new MainComponent(), true);
+            MainComponent *main = new MainComponent();
+            setContentOwned (main, true);
+            
+            
 
            #if JUCE_IOS || JUCE_ANDROID
             setFullScreen (true);
