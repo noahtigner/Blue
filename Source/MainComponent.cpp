@@ -39,6 +39,8 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
         noiseSamplesToTarget = noiseRampLengthSamples;
     };
     noiseSliderLabel.setText("Level", dontSendNotification);
+    synthAudioSource.noiseSlider = &noiseSlider;
+    noiseSlider.addListener(&synthAudioSource);
     
     leftTargetLevel = 0.5f;
     leftSlider.setRange(0.0, 1);
@@ -51,6 +53,8 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     leftSlider.addListener(this);   //make MC a listener
     leftSliderLabel.setText("Left Level", dontSendNotification);
     //leftSlider.setSkewFactorFromMidPoint(0.5);
+    synthAudioSource.leftSlider = &leftSlider;
+    leftSlider.addListener(&synthAudioSource);
     
     rightTargetLevel = 0.5f;
     rightSlider.setRange(0.0, 1);
@@ -63,7 +67,8 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     };
     rightSlider.addListener(this);
     rightSliderLabel.setText("Right Level", dontSendNotification);
-    //rightSlider.setSkewFactorFromMidPoint(0.5);
+    synthAudioSource.rightSlider = &rightSlider;
+    rightSlider.addListener(&synthAudioSource);
     
     
     masterTargetLevel = 0.0f;
@@ -75,11 +80,14 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
         masterSamplesToTarget = masterRampLengthSamples;
     };
     masterSlider.addListener(this);
-    //masterSlider.addListener(&synthAudioSource);
     masterSliderLabel.setText("Master Level", dontSendNotification);
-    
     synthAudioSource.masterSlider = &masterSlider;
     masterSlider.addListener(&synthAudioSource);
+    
+    
+    //&tree::testSlider.setRange(0.0, 1.0);
+    //tree->testSlider.addListener(this);
+    //addAndMakeVisible(&tree->testSlider);
     
     
     /*
@@ -340,7 +348,7 @@ void MainComponent::resized(){
     synthChoice.setBounds(labelJustification, y, labelWidth, sliderHeight);
     
     noiseSlider.setBounds (sliderX, y, sliderWidth-40, sliderHeight);   //x, y, width, height
-    noiseSliderLabel.setBounds (sliderJustification, y, 40, sliderHeight);
+    noiseSliderLabel.setBounds (sliderJustification+1, y, 40, sliderHeight);
     
     leftSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
     leftSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
@@ -350,6 +358,8 @@ void MainComponent::resized(){
     
     masterSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
     masterSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
+    
+    //tree->testSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
     
 
     

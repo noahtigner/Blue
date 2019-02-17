@@ -8,7 +8,6 @@
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Tree.h"
 #include "SynthSource.h"
 #include "SineWave.h"
 
@@ -36,6 +35,8 @@ public:
     ~MainComponent();
 
     //==============================================================================
+    
+   
 
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override;

@@ -20,26 +20,36 @@ class SynthAudioSource: public AudioSource,
 
 {
 public:
+    
+    Slider *noiseSlider;
+    Slider *leftSlider;
+    Slider *rightSlider;
     Slider *masterSlider;
+    
     
     SynthAudioSource(MidiKeyboardState& keyState):
             keyboardState (keyState)
     {
+        /*
         //for (auto i = 0; i < 4; ++i) {               //add some voices to our synthesiser. This number of voices added determines the polyphony
             sine = new SineWaveVoice();
             sine2 = new SineWaveVoice();
             sine3 = new SineWaveVoice();
             sine4 = new SineWaveVoice();
-            
-            
-            
-            //hksine->addListener(this);
-            //sine->setLevel(masterLevel);
-            synth.addVoice(sine);
-            synth.addVoice(sine2);
-            synth.addVoice(sine3);
-            synth.addVoice(sine4);
-        //}
+         */
+        
+        //sineVoices[0] = new NoiseVoice();
+        
+        for(int i = 0; i < 4; i++) {    //4 polyphony
+            sineVoices[i] = new SineWaveVoice();
+            //sineVoices[i]->masterSlider = masterSlider;
+            //masterSlider->addListener(sineVoices[i]);
+            synth.addVoice(sineVoices[i]);
+        }
+        
+        
+        synth.addVoice(noiseV);
+
         synth.addSound (new SineWaveSound());       //add the sound so that the synthesiser knows which sounds it can play.
     }
     
@@ -52,18 +62,38 @@ public:
     
     
     void sliderValueChanged(Slider *slider) override {
+
+        for(int i = 0; i < 4; i++) {
+            sineVoices[i]->masterSlider = masterSlider;
+            masterSlider->addListener(sineVoices[i]);
+            
+            sineVoices[i]->leftSlider = leftSlider;
+            leftSlider->addListener(sineVoices[i]);
+            
+            sineVoices[i]->rightSlider = rightSlider;
+            rightSlider->addListener(sineVoices[i]);
+            
+            sineVoices[i]->noiseSlider = noiseSlider;
+            noiseSlider->addListener(sineVoices[i]);
+        }
+        noiseV->masterSlider = masterSlider;
+        masterSlider->addListener(noiseV);
         
-        sine->masterSlider = masterSlider;
-        sine2->masterSlider = masterSlider;
-        sine3->masterSlider = masterSlider;
-        sine4->masterSlider = masterSlider;
-        masterSlider->addListener(sine);
-        masterSlider->addListener(sine2);
-        masterSlider->addListener(sine3);
-        masterSlider->addListener(sine4);
+        noiseV->leftSlider = leftSlider;
+        leftSlider->addListener(noiseV);
+        
+        noiseV->rightSlider = rightSlider;
+        rightSlider->addListener(noiseV);
+        
+        noiseV->noiseSlider = noiseSlider;
+        noiseSlider->addListener(noiseV);
+        
+         
+      
+        
         if(slider == masterSlider) {
             //master = masterSlider->getValue();
-            //std::cout << "hey";
+            std::cout << "hey";
         }
     }
     
@@ -103,9 +133,11 @@ private:
     Synthesiser synth;
     MidiMessageCollector midiCollector;
     
-    SineWaveVoice* sine;
-    SineWaveVoice* sine2;
-    SineWaveVoice* sine3;
-    SineWaveVoice* sine4;
+
+    
+    SineWaveVoice* sineVoices[4];
+    
+    NoiseVoice* noiseV = new NoiseVoice();
+    
     
 };
