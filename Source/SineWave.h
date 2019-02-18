@@ -34,6 +34,7 @@ public:
     Slider *leftSlider;
     Slider *rightSlider;
     Slider *masterSlider;
+
     
     
     
@@ -75,7 +76,7 @@ public:
         angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
     }
     
-    void stopNote (float /*velocity*/, bool allowTailOff) override
+    void stopNote (float /*velocity*/, bool allowTailOff = true) override
     {
         if (allowTailOff)
         {
@@ -100,10 +101,17 @@ public:
             {
                 while (--numSamples >= 0)
                 {
+                    
+                    /*
                     auto currentSample = (float) (std::sin (currentAngle)  * level * tailOff);
                     
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
                         outputBuffer.addSample (i, startSample, currentSample);
+                     */
+                    auto leftSample = (float) (std::sin (currentAngle)  * level * leftLevel * tailOff);
+                    auto rightSample = (float) (std::sin (currentAngle)  * level * rightLevel * tailOff);
+                    outputBuffer.addSample (0, startSample, leftSample);
+                    outputBuffer.addSample (1, startSample, rightSample);
                     
                     currentAngle += angleDelta;
                     ++startSample;
@@ -123,10 +131,17 @@ public:
             {
                 while (--numSamples >= 0) //This loop is used for the normal state of the voice, while the key is being held down. Notice that we use the AudioSampleBuffer::addSample() function, which mixes the currentSample value with the value alread at index startSample. This is because the synthesiser will be iterating over all of the voices. It is the responsibility of each voice to mix its output with the current contents of the buffer
                 {
+                    /*
                     auto currentSample = (float) (std::sin (currentAngle) * level);
                     
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
                         outputBuffer.addSample (i, startSample, currentSample);
+                     
+                     */
+                    auto leftSample = (float) (std::sin (currentAngle)  * level * leftLevel);
+                    auto rightSample = (float) (std::sin (currentAngle)  * level * rightLevel);
+                    outputBuffer.addSample (0, startSample, leftSample);
+                    outputBuffer.addSample (1, startSample, rightSample);
                     
                     currentAngle += angleDelta;
                     ++startSample;
@@ -137,125 +152,7 @@ public:
     
 private:
     double currentAngle = 0.0, angleDelta = 0.0, level = 0.0, tailOff = 0.0;
-    double masterLevel = 0.0f, leftLevel = 0.0f, rightLevel = 0.0f, noiseLevel = 0.0f;
+    double masterLevel = 0.5f, leftLevel = 0.5f, rightLevel = 0.5f, noiseLevel = 0.0f;
     
 
-};
-
-class NoiseVoice   : public SynthesiserVoice,
-public Slider::Listener
-{
-public:
-    
-    Slider *noiseSlider;
-    Slider *leftSlider;
-    Slider *rightSlider;
-    Slider *masterSlider;
-    
-    
-    
-    void sliderValueChanged(Slider *slider) override {
-        if(slider == masterSlider) {
-            masterLevel = masterSlider->getValue();
-            //std::cout << "hey";
-        }
-        else if(slider == leftSlider) {
-            leftLevel = leftSlider->getValue();
-        }
-        else if(slider == rightSlider) {
-            rightLevel = rightSlider->getValue();
-        }
-        else if(slider == noiseSlider) {
-            noiseLevel = noiseSlider->getValue();
-        }
-    }
-    
-    NoiseVoice() {}
-    
-    
-    bool canPlaySound (SynthesiserSound* sound) override
-    {
-        return dynamic_cast<SineWaveSound*> (sound) != nullptr;
-    }
-    
-    void startNote (int midiNoteNumber, float velocity,
-                    SynthesiserSound*, int /*currentPitchWheelPosition*/) override
-    {
-        
-#warning !wavetable
-        currentAngle = 0.0;
-        level = velocity * masterLevel * noiseLevel * 0.15;
-        tailOff = 0.0;
-        
-        auto cyclesPerSecond = MidiMessage::getMidiNoteInHertz (midiNoteNumber);
-        auto cyclesPerSample = cyclesPerSecond / getSampleRate();
-        
-        angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
-         
-    }
-    
-    void stopNote (float /*velocity*/, bool allowTailOff) override
-    {
-        if (allowTailOff)
-        {
-            if (tailOff == 0.0)
-                tailOff = 1.0;
-        }
-        else
-        {
-            clearCurrentNote();
-            angleDelta = 0.0;
-        }
-    }
-    
-    void pitchWheelMoved (int) override      {}
-    void controllerMoved (int, int) override {}
-    
-    void renderNextBlock (AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override
-    {
-        
-            if (tailOff > 0.0) //When the key has been released the tailOff value will be greater than zero. You can see the synthesis algorithm is similar
-            {
-                while (--numSamples >= 0)
-                {
-                    auto currentSample = (float) random.nextFloat() * noiseLevel * masterLevel;
-                    
-                    for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-                        outputBuffer.addSample (i, startSample, currentSample);
-                    
-                    currentAngle += angleDelta;
-                    ++startSample;
-                    
-                    tailOff *= 0.99; //simple exponential decay envelope shape
-                    
-                    if (tailOff <= 0.005)
-                    {
-                        clearCurrentNote(); //When the tailOff value is small we determine that the voice has ended. We must call the SynthesiserVoice::clearCurrentNote() function at this point so that the voice is reset and available to be reused
-                        
-                        angleDelta = 0.0;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                while (--numSamples >= 0) //This loop is used for the normal state of the voice, while the key is being held down. Notice that we use the AudioSampleBuffer::addSample() function, which mixes the currentSample value with the value alread at index startSample. This is because the synthesiser will be iterating over all of the voices. It is the responsibility of each voice to mix its output with the current contents of the buffer
-                {
-                    auto currentSample = (float) random.nextFloat() * noiseLevel * masterLevel;
-                    
-                    for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-                        outputBuffer.addSample (i, startSample, currentSample);
-                    
-                    
-                    ++startSample;
-                }
-            }
-        
-    }
-    
-private:
-    double currentAngle = 0.0, angleDelta = 0.0, level = 0.0, tailOff = 0.0;
-    double masterLevel = 0.0f, leftLevel = 0.0f, rightLevel = 0.0f, noiseLevel = 0.0f;
-    
-    Random random;  //for noise
 };

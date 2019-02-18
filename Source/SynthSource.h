@@ -16,7 +16,8 @@
 //==============================================================================
 
 class SynthAudioSource: public AudioSource,
-                        public Slider::Listener
+                        public Slider::Listener,
+                        public ComboBox::Listener
 
 {
 public:
@@ -25,6 +26,7 @@ public:
     Slider *leftSlider;
     Slider *rightSlider;
     Slider *masterSlider;
+    ComboBox *synthChoice;
     
     
     SynthAudioSource(MidiKeyboardState& keyState):
@@ -40,24 +42,55 @@ public:
         
         //sineVoices[0] = new NoiseVoice();
         
+    
+        switch(synthType) {
+            case 1:
+                for(int i = 0; i < 4; i++) {    //4 polyphony
+                    sineVoices[i] = new SineWaveVoice();
+                    //sineVoices[i]->masterSlider = masterSlider;
+                    //masterSlider->addListener(sineVoices[i]);
+                    synth.addVoice(sineVoices[i]);
+                }
+                break;
+        }
+        /*
         for(int i = 0; i < 4; i++) {    //4 polyphony
-            sineVoices[i] = new SineWaveVoice();
-            //sineVoices[i]->masterSlider = masterSlider;
-            //masterSlider->addListener(sineVoices[i]);
-            synth.addVoice(sineVoices[i]);
+            
+            synth.addVoice(new NoiseVoice());
         }
         
-        
-        synth.addVoice(noiseV);
-
-        synth.addSound (new SineWaveSound());       //add the sound so that the synthesiser knows which sounds it can play.
+        //synth.addVoice(noiseV);
+         
+        for(int i = 0; i < 8; i++) {
+        //synth.addSound(new SineWaveSound());
+            synth.addSound (new SineWaveSound());       //add the sound so that the synthesiser knows which sounds it can play.
+        }
+         */
+        synth.addSound (new SineWaveSound()); 
     }
+    
+    
     
     ~SynthAudioSource(){}
     
     void setUsingSineWaveSound()
     {
         synth.clearSounds();
+    }
+    
+    void comboBoxChanged(ComboBox *box) override{
+        if(box == synthChoice) {
+            
+            switch(synthChoice->getSelectedId()) {
+                case 1:
+                    synthType = 1;
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+            }
+        }
     }
     
     
@@ -75,7 +108,13 @@ public:
             
             sineVoices[i]->noiseSlider = noiseSlider;
             noiseSlider->addListener(sineVoices[i]);
+            
+            //sineVoices[i]->synthChoice = synthChoice;
+            //synthChoice->addListener(sineVoices[i]);
         }
+        
+        
+        /*
         noiseV->masterSlider = masterSlider;
         masterSlider->addListener(noiseV);
         
@@ -87,7 +126,7 @@ public:
         
         noiseV->noiseSlider = noiseSlider;
         noiseSlider->addListener(noiseV);
-        
+        */
          
       
         
@@ -137,7 +176,9 @@ private:
     
     SineWaveVoice* sineVoices[4];
     
-    NoiseVoice* noiseV = new NoiseVoice();
+    int synthType = 1;
+    
+    //NoiseVoice* noiseV = new NoiseVoice();
     
     
 };

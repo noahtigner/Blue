@@ -31,7 +31,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
                                     
     //noiseTargetLevel = 0.125;
     noiseTargetLevel = 0.0;
-    noiseSlider.setRange(0.0, 0.25);
+    noiseSlider.setRange(0.0, 1.0);
     noiseSlider.setValue(noiseTargetLevel, dontSendNotification);
     noiseSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     noiseSlider.onValueChange = [this] {
@@ -71,7 +71,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     rightSlider.addListener(&synthAudioSource);
     
     
-    masterTargetLevel = 0.0f;
+    masterTargetLevel = 0.5f;
     masterSlider.setRange(0.0, 1.0);
     masterSlider.setValue(masterTargetLevel, dontSendNotification);
     masterSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
@@ -108,16 +108,26 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     addAndMakeVisible(&masterSlider);
     addAndMakeVisible(&masterSliderLabel);
     
-    addAndMakeVisible(synthChoiceLabel);
-    synthChoice.addItem("Noise", 1);
-    synthChoice.addItem("Sine", 2);
-    synthChoice.addItem("Square", 3);
-    synthChoice.addItem("Saw", 4);
-    synthChoice.addItem("Triangle", 5);
+    //addAndMakeVisible(synthChoiceLabel);
+    synthChoice.setText("Synth");
+    
+    synthChoice.addItem("Sine", 1);
+    synthChoice.setItemEnabled(1, true);
+    synthChoice.addItem("Square", 2);
+    synthChoice.setItemEnabled(2, false);
+    synthChoice.addItem("Saw", 3);
+    synthChoice.setItemEnabled(3, false);
+    synthChoice.addItem("Triangle", 4);
+    synthChoice.setItemEnabled(4, false);
     addAndMakeVisible(synthChoice);
+    synthChoice.addSeparator();
+    synthChoice.addItem("Noise", 5);
+    synthChoice.setItemEnabled(5, false);
+    
     synthChoice.onChange = [this] {synthChoiceChanged(); };
     synthChoice.setSelectedId(1);
-    
+    synthAudioSource.synthChoice = &synthChoice;
+    synthChoice.addListener(&synthAudioSource);
     
     
     
@@ -333,7 +343,7 @@ void MainComponent::resized(){
     
     const int sliderJustification = 110;
     const int sliderX = sliderJustification + 40;
-    const int sliderWidth = getWidth() - (sliderJustification + 20);
+    const int sliderWidth = getWidth() - (sliderJustification + 10);
     const int sliderHeight = 20;
     
     const int labelJustification = 10;
