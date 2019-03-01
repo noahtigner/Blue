@@ -2,16 +2,17 @@ Blue
 
 C++14 / JUCE Framework
 * * *
-TODO:
-	~GUI~
+	TODO
 	
-	~Output Level Control~
+	~~GUI~~
 	
-	~MIDI Capability~
+	~~Output Level Control~~
 	
-	~Polyphony~
+	~~MIDI Capability~~
 	
-	~Sine Waves~
+	~~Polyphony~~
+	
+	~~Sine Waves~~
 	
 	Square Waves
 	
@@ -19,7 +20,7 @@ TODO:
 	
 	Triangle Waves
 	
-	~Noise~
+	~~Noise~~
 	
 	Envelope (ADSR)
 	
