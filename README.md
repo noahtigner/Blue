@@ -2,7 +2,7 @@ Blue
 
 C++14 / JUCE Framework
 * * *
-	
+TODO:
 ~~GUI~~
 ~~Output Level Control~~
 ~~MIDI Capability~~
