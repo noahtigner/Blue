@@ -10,6 +10,9 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "SynthSource.h"
 #include "SineWave.h"
+//#include "SquareWave.h"
+//#include "WaveformViewComponent.h"
+//#include "SpectralViewComponent.h"
 
 
 //==============================================================================
@@ -69,6 +72,8 @@ public:
 private:
     //==============================================================================
     // Your private member variables go here...
+    
+    //AnalyserComponent analyzer;
     
     Random random;  //for noise
     
@@ -131,8 +136,33 @@ private:
     
     int master;
     
-
+    Slider attackSlider;
+    Label attackSliderLabel;
     
+    Slider decaySlider;
+    Label decaySliderLabel;
+    
+    Slider sustainSlider;
+    Label sustainSliderLabel;
+    
+    Slider releaseSlider;
+    Label releaseSliderLabel;
+    
+    Slider lpCutoffSlider;
+    Label lpCutoffLabel;
+    
+    Slider lpResSlider;
+    Label lpResLabel;
+    
+    Slider hpCutoffSlider;
+    Label hpCutoffLabel;
+    
+    Slider hpResSlider;
+    Label hpResLabel;
+    
+
+    //WaveformViewComponent waveformView;
+    //SpectralViewComponent spectralView;
     
     
     //==========================================================================
@@ -140,6 +170,8 @@ private:
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
+
+
 
 
 

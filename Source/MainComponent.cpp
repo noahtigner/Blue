@@ -1,10 +1,10 @@
 /*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
+ ==============================================================================
+ 
+ This file was auto-generated!
+ 
+ ==============================================================================
+ */
 
 #include "MainComponent.h"
 #include "SynthSource.h"
@@ -22,13 +22,13 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     setAudioChannels (0, 2);    //no in, 2 out
     
     /*
-    static Identifier myNodeType ("MyNode"); // pre-create an Identifier
-    ValueTree myNode (myNodeType);           // This is a valid node, of type "MyNode"
-    */
+     static Identifier myNodeType ("MyNode"); // pre-create an Identifier
+     ValueTree myNode (myNodeType);           // This is a valid node, of type "MyNode"
+     */
     
-  
-                                    
-                                    
+    
+    
+    
     //noiseTargetLevel = 0.125;
     noiseTargetLevel = 0.0;
     noiseSlider.setRange(0.0, 1.0);
@@ -89,11 +89,89 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     //tree->testSlider.addListener(this);
     //addAndMakeVisible(&tree->testSlider);
     
+    attackSlider.setRange(0, 10000);
+    attackSlider.setValue(500, dontSendNotification);
+    attackSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    attackSlider.addListener(this);
+    attackSliderLabel.setText("Attack", dontSendNotification);
+    synthAudioSource.attackSlider = &attackSlider;
+    attackSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&attackSlider);
+    addAndMakeVisible(&attackSliderLabel);
     
-    /*
-    static Identifier propertyName ("master");
-    myNode.setProperty (propertyName, &masterSlider, nullptr);
-    */
+    decaySlider.setRange(0, 10000);
+    decaySlider.setValue(500, dontSendNotification);
+    decaySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    decaySlider.addListener(this);
+    decaySliderLabel.setText("Decay", dontSendNotification);
+    synthAudioSource.decaySlider = &decaySlider;
+    decaySlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&decaySlider);
+    addAndMakeVisible(&decaySliderLabel);
+    
+    sustainSlider.setRange(0.0, 1.0);
+    sustainSlider.setValue(.8, dontSendNotification);
+    sustainSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    sustainSlider.addListener(this);
+    sustainSliderLabel.setText("Sustain", dontSendNotification);
+    synthAudioSource.sustainSlider = &sustainSlider;
+    sustainSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&sustainSlider);
+    addAndMakeVisible(&sustainSliderLabel);
+    
+    releaseSlider.setRange(0, 10000);
+    releaseSlider.setValue(500, dontSendNotification);
+    releaseSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    releaseSlider.addListener(this);
+    releaseSliderLabel.setText("Release", dontSendNotification);
+    synthAudioSource.releaseSlider = &releaseSlider;
+    releaseSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&releaseSlider);
+    addAndMakeVisible(&releaseSliderLabel);
+    
+    lpCutoffSlider.setRange(10, 30000);
+    lpCutoffSlider.setValue(10);
+    lpCutoffSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    lpCutoffSlider.addListener(this);
+    lpCutoffLabel.setText("Cutoff", dontSendNotification);
+    synthAudioSource.lpCutoffSlider = &lpCutoffSlider;
+    lpCutoffSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&lpCutoffSlider);
+    addAndMakeVisible(&lpCutoffLabel);
+    
+    lpResSlider.setRange(1.0, 10.0);
+    lpResSlider.setValue(1.0);
+    lpResSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    lpResSlider.addListener(this);
+    lpResLabel.setText("Resonance", dontSendNotification);
+    synthAudioSource.lpResSlider = &lpResSlider;
+    lpResSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&lpResSlider);
+    addAndMakeVisible(&lpResLabel);
+    
+    hpCutoffSlider.setRange(10, 30000);
+    hpCutoffSlider.setValue(10);
+    hpCutoffSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    hpCutoffSlider.addListener(this);
+    hpCutoffLabel.setText("Cutoff", dontSendNotification);
+    synthAudioSource.lpCutoffSlider = &hpCutoffSlider;
+    hpCutoffSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&hpCutoffSlider);
+    addAndMakeVisible(&hpCutoffLabel);
+    
+    hpResSlider.setRange(1.0, 10.0);
+    hpResSlider.setValue(1.0);
+    hpResSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    hpResSlider.addListener(this);
+    hpResLabel.setText("Resonance", dontSendNotification);
+    synthAudioSource.hpResSlider = &hpResSlider;
+    hpResSlider.addListener(&synthAudioSource);
+    addAndMakeVisible(&hpResSlider);
+    addAndMakeVisible(&hpResLabel);
+    
+    
+    
+    
     
     addAndMakeVisible (&noiseSlider);
     addAndMakeVisible (&noiseSliderLabel);
@@ -114,7 +192,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     synthChoice.addItem("Sine", 1);
     synthChoice.setItemEnabled(1, true);
     synthChoice.addItem("Square", 2);
-    synthChoice.setItemEnabled(2, false);
+    synthChoice.setItemEnabled(2, true);
     synthChoice.addItem("Saw", 3);
     synthChoice.setItemEnabled(3, false);
     synthChoice.addItem("Triangle", 4);
@@ -159,8 +237,9 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
         setMidiInput (0);
     //keyboardComponent.setAvailableRange(24, 103);
     
+    setWantsKeyboardFocus(true);
     
-    setSize (600, 300);
+    setSize (600, 500);
 }
 
 MainComponent::~MainComponent() {
@@ -174,7 +253,7 @@ MainComponent::~MainComponent() {
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate) {
     // This function will be called when the audio device is started, or when
     // its settings (i.e. sample rate, block size, etc) are changed.
-
+    
     // You can use this function to initialise any resources you might need,
     // but be careful - it will be called on the audio thread, not the GUI thread.
     
@@ -185,9 +264,9 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     message << " sampleRate = " << sampleRate;
     Logger::getCurrentLogger()->writeToLog (message);
     
-   
+    
     // For more details, see the help for AudioProcessor::prepareToPlay()
-
+    
     synthAudioSource.prepareToPlay (samplesPerBlockExpected, sampleRate);
 }
 
@@ -195,59 +274,59 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     // Your audio-processing code goes here!
     
     /*
-    //Noise Block
-    auto noiseLevel = (float) noiseSlider.getValue();
-    auto leftLevel = (float) leftSlider.getValue();
-    auto rightLevel = (float) rightSlider.getValue();
-    auto masterLevel = (float) masterSlider.getValue();
-    
-    auto levelScale = noiseLevel * 2.0f;
-    auto sample = 0;
-
-    
-    #warning TODO
-    
-    auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-    auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
-    
-    switch(synthChoice.getSelectedId()) {
-        
-        case 1: //Noise
-            for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-                leftBuffer[sample] = random.nextFloat() * leftLevel * (levelScale - noiseLevel) * masterLevel;
-                rightBuffer[sample] = random.nextFloat() * rightLevel * (levelScale - noiseLevel) * masterLevel;
-            }
-            break;
-            
-        case 3: //Square
-            auto f = 1.0f; //f, frequency
-            auto A = 0.75f;  //A, peak amplitude
-            auto phase = 0.0f;
-            auto pi = 3.14159265358979323846f;
-            
-            for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-                if(phase<pi) {
-                    leftBuffer[sample] = A * leftLevel * noiseLevel * masterLevel;
-                    rightBuffer[sample] = A * rightLevel * noiseLevel * masterLevel;
-                }
-                else {
-                    leftBuffer[sample] = (0.0f-A) * leftLevel * noiseLevel * masterLevel;
-                    rightBuffer[sample] = (0.0f-A) * rightLevel  * noiseLevel * masterLevel;
-                }
-                
-                phase = phase + ((2*pi*f) / bufferToFill.numSamples);
-                
-                if(phase>(2*pi)) {
-                    phase = phase - (2*pi);
-                }
-            }
-            break;
-    }
-    synthChoice.setItemEnabled(2, false);
-    synthChoice.setItemEnabled(4, false);
-    synthChoice.setItemEnabled(5, false);
-    
-    */
+     //Noise Block
+     auto noiseLevel = (float) noiseSlider.getValue();
+     auto leftLevel = (float) leftSlider.getValue();
+     auto rightLevel = (float) rightSlider.getValue();
+     auto masterLevel = (float) masterSlider.getValue();
+     
+     auto levelScale = noiseLevel * 2.0f;
+     auto sample = 0;
+     
+     
+     #warning TODO
+     
+     auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+     auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
+     
+     switch(synthChoice.getSelectedId()) {
+     
+     case 1: //Noise
+     for(sample = 0; sample < bufferToFill.numSamples; sample++) {
+     leftBuffer[sample] = random.nextFloat() * leftLevel * (levelScale - noiseLevel) * masterLevel;
+     rightBuffer[sample] = random.nextFloat() * rightLevel * (levelScale - noiseLevel) * masterLevel;
+     }
+     break;
+     
+     case 3: //Square
+     auto f = 1.0f; //f, frequency
+     auto A = 0.75f;  //A, peak amplitude
+     auto phase = 0.0f;
+     auto pi = 3.14159265358979323846f;
+     
+     for(sample = 0; sample < bufferToFill.numSamples; sample++) {
+     if(phase<pi) {
+     leftBuffer[sample] = A * leftLevel * noiseLevel * masterLevel;
+     rightBuffer[sample] = A * rightLevel * noiseLevel * masterLevel;
+     }
+     else {
+     leftBuffer[sample] = (0.0f-A) * leftLevel * noiseLevel * masterLevel;
+     rightBuffer[sample] = (0.0f-A) * rightLevel  * noiseLevel * masterLevel;
+     }
+     
+     phase = phase + ((2*pi*f) / bufferToFill.numSamples);
+     
+     if(phase>(2*pi)) {
+     phase = phase - (2*pi);
+     }
+     }
+     break;
+     }
+     synthChoice.setItemEnabled(2, false);
+     synthChoice.setItemEnabled(4, false);
+     synthChoice.setItemEnabled(5, false);
+     
+     */
     
     //Wavetable synthesis
     
@@ -259,7 +338,7 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
 void MainComponent::releaseResources() {
     // This will be called when the audio device stops, or when it is being
     // restarted due to a setting change.
-
+    
     Logger::getCurrentLogger()->writeToLog ("Releasing audio resources");
     
     // For more details, see the help for AudioProcessor::releaseResources()
@@ -274,6 +353,8 @@ void MainComponent::paint (Graphics& g) {
     
     // You can add your drawing code here!
     
+    
+    
     Array<Colour> colours {
         Colour (25, 25, 25),    //black
         Colour (33, 33, 33),    //darkGrey
@@ -282,7 +363,8 @@ void MainComponent::paint (Graphics& g) {
         Colour (191, 191, 191), //gray
         Colour (15, 199, 149),  //blue
         Colour (63, 33, 89),    //purple
-        Colour (0x1000b00)      //gray
+        Colour (0x1000b00),     //gray
+        Colour (24, 35, 52)      //trackGrey
     };
     auto black = colours[0];
     auto darkGrey = colours[1];
@@ -291,6 +373,9 @@ void MainComponent::paint (Graphics& g) {
     auto blue = colours[5];
     auto purple = colours[6];
     auto def = colours[7];
+    auto trackGrey = colours[8];
+    
+    g.fillAll(darkGrey);   //Set Background
     
     noiseSliderLabel.setColour (Label::textColourId, blue);
     noiseSlider.setColour(Slider::thumbColourId, blue);
@@ -325,13 +410,103 @@ void MainComponent::paint (Graphics& g) {
     synthChoice.setColour(ComboBox::buttonColourId, blue);
     synthChoice.setColour(ComboBox::arrowColourId, blue);
     synthChoice.setColour(ComboBox::focusedOutlineColourId, purple);
- 
+    
     keyboardComponent.setColour(MidiKeyboardComponent::whiteNoteColourId, darkGrey);
     keyboardComponent.setColour(MidiKeyboardComponent::blackNoteColourId, black);
     keyboardComponent.setColour(MidiKeyboardComponent::upDownButtonBackgroundColourId, black);
     keyboardComponent.setColour(MidiKeyboardComponent::keyDownOverlayColourId, offWhite);
     
-    g.fillAll(darkGrey);   //Set Background
+    attackSliderLabel.setColour(Label::textColourId, blue);
+    attackSliderLabel.setJustificationType(36);
+    attackSlider.setColour(Slider::thumbColourId, blue);
+    attackSlider.setColour(Slider::trackColourId, purple);
+    attackSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    attackSlider.setColour(Slider::textBoxTextColourId, blue);
+    attackSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    attackSlider.setSliderStyle(Slider::Rotary);
+
+    decaySliderLabel.setColour(Label::textColourId, blue);
+    decaySliderLabel.setJustificationType(36);
+    decaySlider.setColour(Slider::thumbColourId, blue);
+    decaySlider.setColour(Slider::trackColourId, purple);
+    decaySlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    decaySlider.setColour(Slider::textBoxTextColourId, blue);
+    decaySlider.setColour(Slider::textBoxOutlineColourId, purple);
+    decaySlider.setSliderStyle(Slider::Rotary);
+    
+    sustainSliderLabel.setColour(Label::textColourId, blue);
+    sustainSliderLabel.setJustificationType(36);
+    sustainSlider.setColour(Slider::thumbColourId, blue);
+    sustainSlider.setColour(Slider::trackColourId, purple);
+    sustainSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    sustainSlider.setColour(Slider::textBoxTextColourId, blue);
+    sustainSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    sustainSlider.setSliderStyle(Slider::Rotary);
+
+    releaseSliderLabel.setColour(Label::textColourId, blue);
+    releaseSliderLabel.setJustificationType(36);
+    releaseSlider.setColour(Slider::thumbColourId, blue);
+    releaseSlider.setColour(Slider::trackColourId, purple);
+    releaseSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    releaseSlider.setColour(Slider::textBoxTextColourId, blue);
+    releaseSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    releaseSlider.setSliderStyle(Slider::Rotary);
+    
+    lpCutoffLabel.setColour(Label::textColourId, blue);
+    lpCutoffLabel.setJustificationType(36);
+    lpCutoffSlider.setColour(Slider::thumbColourId, blue);
+    lpCutoffSlider.setColour(Slider::trackColourId, purple);
+    lpCutoffSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    lpCutoffSlider.setColour(Slider::textBoxTextColourId, blue);
+    lpCutoffSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    lpCutoffSlider.setSliderStyle(Slider::Rotary);
+    
+    lpResLabel.setColour(Label::textColourId, blue);
+    lpResLabel.setJustificationType(36);
+    lpResSlider.setColour(Slider::thumbColourId, blue);
+    lpResSlider.setColour(Slider::trackColourId, purple);
+    lpResSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    lpResSlider.setColour(Slider::textBoxTextColourId, blue);
+    lpResSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    lpResSlider.setSliderStyle(Slider::Rotary);
+    
+    hpCutoffLabel.setColour(Label::textColourId, blue);
+    hpCutoffLabel.setJustificationType(36);
+    hpCutoffSlider.setColour(Slider::thumbColourId, blue);
+    hpCutoffSlider.setColour(Slider::trackColourId, purple);
+    hpCutoffSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    hpCutoffSlider.setColour(Slider::textBoxTextColourId, blue);
+    hpCutoffSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    hpCutoffSlider.setSliderStyle(Slider::Rotary);
+    
+    hpResLabel.setColour(Label::textColourId, blue);
+    hpResLabel.setJustificationType(36);
+    hpResSlider.setColour(Slider::thumbColourId, blue);
+    hpResSlider.setColour(Slider::trackColourId, purple);
+    hpResSlider.setColour(Slider::rotarySliderFillColourId, purple);
+    //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
+    hpResSlider.setColour(Slider::textBoxTextColourId, blue);
+    hpResSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    hpResSlider.setSliderStyle(Slider::Rotary);
+    
+    g.setColour(blue);
+    g.fillRoundedRectangle(110, 130, 400, 130, 20);
+    
+    g.fillRoundedRectangle(110, 260, 200, 130, 20);
+    g.fillRoundedRectangle(310, 260, 200, 130, 20);
+    
+    g.setColour(darkGrey);
+    g.fillRoundedRectangle(111, 131, 398, 128, 20);
+    
+    g.fillRoundedRectangle(111, 261, 198, 128, 20);
+    g.fillRoundedRectangle(311, 261, 198, 128, 20);
 }
 
 
@@ -371,13 +546,39 @@ void MainComponent::resized(){
     
     //tree->testSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
     
+    attackSliderLabel.setBounds(sliderJustification, y+=30, 100, sliderHeight);
+    attackSlider.setBounds(sliderJustification, y+20, 100, 100);
 
+    decaySliderLabel.setBounds(sliderJustification + 100, y, 100, sliderHeight);
+    decaySlider.setBounds(sliderJustification + 100, y+20, 100, 100);
+    
+    sustainSliderLabel.setBounds(sliderJustification + 200, y, 100, sliderHeight);
+    sustainSlider.setBounds(sliderJustification + 200, y+20, 100, 100);
+    
+    releaseSliderLabel.setBounds(sliderJustification + 300, y, 100, sliderHeight);
+    releaseSlider.setBounds(sliderJustification + 300, y+20, 100, 100);
+    
+    
+    //===========================================
+    
+    
+    lpCutoffLabel.setBounds(sliderJustification, y+=130, 100, sliderHeight);
+    lpCutoffSlider.setBounds(sliderJustification, y+20, 100, 100);
+    
+    lpResLabel.setBounds(sliderJustification+100, y, 100, sliderHeight);
+    lpResSlider.setBounds(sliderJustification+100, y+20, 100, 100);
+    
+    hpCutoffLabel.setBounds(sliderJustification+200, y, 100, sliderHeight);
+    hpCutoffSlider.setBounds(sliderJustification+200, y+20, 100, 100);
+    
+    hpResLabel.setBounds(sliderJustification+300, y, 100, sliderHeight);
+    hpResSlider.setBounds(sliderJustification+300, y+20, 100, 100);
     
     //midiInputList.setBounds(200, y+=30, getWidth() - 210, 20);
-    keyboardComponent.setBounds(labelJustification, y+=30, getWidth() - 20, 100);
+    keyboardComponent.setBounds(labelJustification, y+=200, getWidth() - 20, 100);
     
     
-
+    
 }
 void MainComponent::timerCallback() {
     Logger::getCurrentLogger()->writeToLog ("here");
@@ -405,4 +606,5 @@ void MainComponent::setMidiInput (int index)
     midiInputList.setSelectedId (index + 1, dontSendNotification);
     lastInputIndex = index;
 }
+
 
