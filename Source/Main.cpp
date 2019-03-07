@@ -10,7 +10,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainComponent.h"
-#include "SynthSource.h"
+//#include "SynthSource.h"
 
 //using namespace std;
 

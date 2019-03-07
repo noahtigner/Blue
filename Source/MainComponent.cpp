@@ -14,7 +14,6 @@
 MainComponent::MainComponent(): synthAudioSource  (keyboardState),
 keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
-    // specify the number of input and output channels that we want to open
     setAudioChannels (0, 2);    //no in, 2 out
     
     noiseTargetLevel = 0.0;
@@ -25,7 +24,6 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
         noiseTargetLevel = noiseSlider.getValue();
         noiseSamplesToTarget = noiseRampLengthSamples;
     };
-    //noiseSliderLabel.setText("Level", dontSendNotification);
     synthAudioSource.noiseSlider = &noiseSlider;
     noiseSlider.addListener(&synthAudioSource);
     
@@ -39,7 +37,6 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     };
     leftSlider.addListener(this);   //make MC a listener
     leftSliderLabel.setText("Left", dontSendNotification);
-    //leftSlider.setSkewFactorFromMidPoint(0.5);
     synthAudioSource.leftSlider = &leftSlider;
     leftSlider.addListener(&synthAudioSource);
     
@@ -71,11 +68,6 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     synthAudioSource.masterSlider = &masterSlider;
     masterSlider.addListener(&synthAudioSource);
     
-    
-    //&tree::testSlider.setRange(0.0, 1.0);
-    //tree->testSlider.addListener(this);
-    //addAndMakeVisible(&tree->testSlider);
-    
     attackSlider.setRange(0, 5000, 1);
     attackSlider.setValue(500, dontSendNotification);
     attackSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
@@ -103,7 +95,6 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     sustainSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     sustainSlider.addListener(this);
     sustainSliderLabel.setText("Sustain", dontSendNotification);
-    //sustainSlider.setTextValueSuffix("ms");
     synthAudioSource.sustainSlider = &sustainSlider;
     sustainSlider.addListener(&synthAudioSource);
     addAndMakeVisible(&sustainSlider);
@@ -196,18 +187,16 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     synthAudioSource.synthChoice = &synthChoice;
     synthChoice.addListener(&synthAudioSource);
     
-    
-    // Make sure you set the size of the component after
-    // you add any child components.
     keyboardComponent.setKeyPressBaseOctave(5);
-    //keyboardComponent.setOctaveForMiddleC(2);
     addAndMakeVisible (keyboardComponent);
     
+    /*
     //addAndMakeVisible (midiInputListLabel);
     //midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
     //midiInputListLabel.attachToComponent (&midiInputList, true);
     //addAndMakeVisible (midiInputList);
     //midiInputList.setTextWhenNoChoicesAvailable ("No MIDI Inputs Enabled");
+    */
     auto midiInputs = MidiInput::getDevices();
     //midiInputList.addItemList (midiInputs, 1);
     midiInputList.onChange = [this] { setMidiInput (midiInputList.getSelectedItemIndex()); };
@@ -221,11 +210,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     }
     if (midiInputList.getSelectedId() == 0)
         setMidiInput (0);
-    
-    //keyboardComponent.setAvailableRange(24, 103);
-    
-    //setWantsKeyboardFocus(true);
-    
+
     setSize (600, 550);
 }
 
@@ -251,14 +236,13 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     message << " sampleRate = " << sampleRate;
     Logger::getCurrentLogger()->writeToLog (message);
     
-    
     // For more details, see the help for AudioProcessor::prepareToPlay()
     
     synthAudioSource.prepareToPlay (samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) {
-    // Your audio-processing code goes here!
+    
     synthAudioSource.getNextAudioBlock(bufferToFill);
 }
 
@@ -327,8 +311,8 @@ void MainComponent::paint (Graphics& g) {
     
     masterSliderLabel.setColour(Label::textColourId, blue);
     //masterSliderLabel.setJustificationType(1);
-    masterSlider.setColour(Slider::thumbColourId, purple);
-    masterSlider.setColour(Slider::trackColourId, blue);
+    masterSlider.setColour(Slider::thumbColourId, blue);
+    masterSlider.setColour(Slider::trackColourId, purple);
     masterSlider.setColour(Slider::textBoxTextColourId, blue);
     masterSlider.setColour(Slider::textBoxOutlineColourId, purple);
     
@@ -436,17 +420,17 @@ void MainComponent::paint (Graphics& g) {
     hpResSlider.setSliderStyle(Slider::Rotary);
     
     envelope.setText("Envelope", dontSendNotification);
-    envelope.setColour(Label::textColourId, darkGrey);
+    envelope.setColour(Label::textColourId, blue);
     envelope.setJustificationType(36);
     addAndMakeVisible(&envelope);
     
     lp.setText("Lowpass", dontSendNotification);
-    lp.setColour(Label::textColourId, darkGrey);
+    lp.setColour(Label::textColourId, blue);
     lp.setJustificationType(36);
     addAndMakeVisible(&lp);
     
     hp.setText("Highpass", dontSendNotification);
-    hp.setColour(Label::textColourId, darkGrey);
+    hp.setColour(Label::textColourId, blue);
     hp.setJustificationType(36);
     addAndMakeVisible(&hp);
     
@@ -463,11 +447,15 @@ void MainComponent::paint (Graphics& g) {
     g.fillRoundedRectangle(305, 230, 150, 60, 20);
     g.fillRoundedRectangle(305, 250, 195, 150, 20);
 
-    
     g.setColour(darkGrey);
     g.fillRoundedRectangle(101, 71, 398, 148, 20);
     g.fillRoundedRectangle(101, 251, 193, 148, 20);
     g.fillRoundedRectangle(306, 251, 193, 148, 20);
+    
+    g.fillRoundedRectangle(110, 51, 130, 19, 10);
+    g.fillRoundedRectangle(110, 231, 130, 19, 10);
+    g.fillRoundedRectangle(315, 231, 130, 19, 10);
+    
 }
 
 void MainComponent::resized(){
@@ -479,21 +467,13 @@ void MainComponent::resized(){
     synthChoice.setBounds(labelJustification, y, 80, sliderHeight);
     
     noiseSlider.setBounds(95, y, 495, sliderHeight);   //x, y, width, height
-    //noiseSliderLabel.setBounds(100, y, 40, sliderHeight);
-    
-    //leftSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
-    //leftSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
-    
+
     leftSlider.setBounds(20, 50, 60, 340);
     leftSliderLabel.setBounds(20, 385, 60, 20);
     
     rightSlider.setBounds(getWidth()-80, 50, 60, 340);
     rightSliderLabel.setBounds(getWidth()-80, 385, 60, 20);
     
-    
-    //rightSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
-    //rightSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
-
     envelope.setBounds(135, 50, 80, 20);
     
     attackSliderLabel.setBounds(100, 80, 100, sliderHeight);
@@ -511,7 +491,7 @@ void MainComponent::resized(){
     releaseSlider.setBounds(400, 100, 100, 100);
  
     
-    //===========================================
+//==============================================================================
     
     
     lpCutoffLabel.setBounds(100, 260, 100, sliderHeight);
@@ -526,31 +506,22 @@ void MainComponent::resized(){
     hpResLabel.setBounds(400, 260, 100, sliderHeight);
     hpResSlider.setBounds(400, 280, 100, 100);
     
+//==============================================================================
+    
     masterSlider.setBounds(95, 420, 495, sliderHeight);
     masterSliderLabel.setBounds(labelJustification, 419, 100, sliderHeight);
     
     keyboardComponent.setBounds(10, 450, getWidth() - 20, 90);
-    
-    
-    
 }
 void MainComponent::timerCallback() {
     Logger::getCurrentLogger()->writeToLog ("here");
 }
 
 void MainComponent::synthChoiceChanged() {
-    switch(synthChoice.getSelectedId()) {
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-    }
+    
 }
 
-void MainComponent::setMidiInput (int index)
-{
+void MainComponent::setMidiInput (int index) {
     auto list = MidiInput::getDevices();
     deviceManager.removeMidiInputCallback (list[lastInputIndex], synthAudioSource.getMidiCollector()); //remove the previous MidiInputCallback object for the previously selected MIDI input device if the user changes the selected device using the combo-box
     auto newInput = list[index];

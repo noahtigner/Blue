@@ -14,7 +14,6 @@ class MainComponent   : public AudioAppComponent,
                         public Slider::Listener,
                         private Timer
 {
-   
     
 public:
     //==============================================================================
@@ -22,20 +21,15 @@ public:
     ~MainComponent();
 
     //==============================================================================
-    
-   
 
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
     void synthChoiceChanged();
-    
-    
 
     //==============================================================================
     void paint (Graphics& g) override;
     void resized() override;
-    
     
     //Makes L,R Sliders co-dependent
     void sliderValueChanged(Slider *slider) override {
@@ -45,7 +39,6 @@ public:
         else if(slider == &rightSlider) {
             leftSlider.setValue(1.0 - rightSlider.getValue());
         }
-        
         else if(slider == &masterSlider) {
             master = masterSlider.getValue();
         }
@@ -89,11 +82,8 @@ private:
     
     ComboBox midiInputList;
     Label midiInputListLabel;
+    
     int lastInputIndex = 0;
-    
-    void timerCallback() override;
-    void setMidiInput(int index);
-    
     int master;
     
     Slider attackSlider;
@@ -124,6 +114,9 @@ private:
     Label envelope;
     Label lp;
     Label hp;
+    
+    void timerCallback() override;
+    void setMidiInput(int index);
     //==========================================================================
     
     

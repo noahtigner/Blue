@@ -13,9 +13,8 @@
 #include "maximilian.h"
 
 
-class SynthSound   : public SynthesiserSound
-//public MainComponent
-{
+class SynthSound   : public SynthesiserSound {
+
     //the sound class might be where you would store data that is needed to create the sound (such as a wavetable)
 public:
     SynthSound() {}

@@ -39,18 +39,18 @@ public:
     keyboardState (keyState)
     {
         /*
-         //for (auto i = 0; i < 4; ++i) {               //add some voices to our synthesiser. This number of voices added determines the polyphony
+         //for (auto i = 0; i < 4; ++i) {       //number of voices added determines the polyphony
    
          */
         switch(synthType) {
             case 1:
                 for(int i = 0; i < 4; i++) {    //4 polyphony
-                    sineVoices[i] = new SynthVoice();
+                    Voices[i] = new SynthVoice();
                     //sineVoices[i]->masterSlider = masterSlider;
                     //masterSlider->addListener(sineVoices[i]);
                     
                     
-                    synth.addVoice(sineVoices[i]);
+                    synth.addVoice(Voices[i]);
                 }
                 break;
         }
@@ -64,10 +64,10 @@ public:
         synth.clearSounds();
     }
     
-    void comboBoxChanged(ComboBox *box) override{
+    void comboBoxChanged(ComboBox *box) override {
         for(int i = 0; i < 4; i++) {
-            sineVoices[i]->synthChoice = synthChoice;
-            synthChoice->addListener(sineVoices[i]);
+            Voices[i]->synthChoice = synthChoice;
+            synthChoice->addListener(Voices[i]);
         }
     }
     
@@ -77,61 +77,55 @@ public:
         for(int i = 0; i < 4; i++) {
 #warning Pull Out of Loop
             
-            sineVoices[i]->masterSlider = masterSlider;
-            masterSlider->addListener(sineVoices[i]);
+            Voices[i]->masterSlider = masterSlider;
+            masterSlider->addListener(Voices[i]);
             
-            sineVoices[i]->leftSlider = leftSlider;
-            leftSlider->addListener(sineVoices[i]);
+            Voices[i]->leftSlider = leftSlider;
+            leftSlider->addListener(Voices[i]);
             
-            sineVoices[i]->rightSlider = rightSlider;
-            rightSlider->addListener(sineVoices[i]);
+            Voices[i]->rightSlider = rightSlider;
+            rightSlider->addListener(Voices[i]);
             
-            sineVoices[i]->noiseSlider = noiseSlider;
-            noiseSlider->addListener(sineVoices[i]);
-            
-            
-            sineVoices[i]->attackSlider = attackSlider;
-            attackSlider->addListener(sineVoices[i]);
-            
-            sineVoices[i]->decaySlider = decaySlider;
-            decaySlider->addListener(sineVoices[i]);
-            
-            sineVoices[i]->sustainSlider = sustainSlider;
-            sustainSlider->addListener(sineVoices[i]);
-            
-            sineVoices[i]->releaseSlider = releaseSlider;
-            releaseSlider->addListener(sineVoices[i]);
-            
-            sineVoices[i]->lpCutoffSlider = lpCutoffSlider;
-            lpCutoffSlider->addListener(sineVoices[i]);
-            
-            sineVoices[i]->lpResSlider = lpResSlider;
-            lpResSlider->addListener(sineVoices[i]);
-            
-            //std::cout<<hpCutoffSlider->getValue();
-            sineVoices[i]->hpCutoffSlider = hpCutoffSlider;
-            hpCutoffSlider->addListener(sineVoices[i]);
-            
-            sineVoices[i]->hpResSlider = hpResSlider;
-            hpResSlider->addListener(sineVoices[i]);
+            Voices[i]->noiseSlider = noiseSlider;
+            noiseSlider->addListener(Voices[i]);
             
             
+            Voices[i]->attackSlider = attackSlider;
+            attackSlider->addListener(Voices[i]);
+            
+            Voices[i]->decaySlider = decaySlider;
+            decaySlider->addListener(Voices[i]);
+            
+            Voices[i]->sustainSlider = sustainSlider;
+            sustainSlider->addListener(Voices[i]);
+            
+            Voices[i]->releaseSlider = releaseSlider;
+            releaseSlider->addListener(Voices[i]);
+            
+            Voices[i]->lpCutoffSlider = lpCutoffSlider;
+            lpCutoffSlider->addListener(Voices[i]);
+            
+            Voices[i]->lpResSlider = lpResSlider;
+            lpResSlider->addListener(Voices[i]);
+            
+            Voices[i]->hpCutoffSlider = hpCutoffSlider;
+            hpCutoffSlider->addListener(Voices[i]);
+            
+            Voices[i]->hpResSlider = hpResSlider;
+            hpResSlider->addListener(Voices[i]);
         }
     }
     
-    
     void getLevel(){}
     
-    void prepareToPlay (int /*samplesPerBlockExpected*/, double sampleRate) override
-    {
+    void prepareToPlay (int /*samplesPerBlockExpected*/, double sampleRate) override {
         synth.setCurrentPlaybackSampleRate (sampleRate); //synthesiser needs to know the sample rate of the audio output.
         midiCollector.reset(sampleRate);    //order to process the timestamps of the MIDI data the MidiMessageCollector class needs to know the audio sample rate
     }
     
     void releaseResources() override {}
     
-    void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
-    {
+    void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override {
         bufferToFill.clearActiveBufferRegion();
         
         MidiBuffer incomingMidi;
@@ -153,8 +147,7 @@ private:
     MidiKeyboardState& keyboardState;
     Synthesiser synth;
     MidiMessageCollector midiCollector;
-
-    SynthVoice* sineVoices[4];
+    SynthVoice* Voices[4];
     
     int synthType = 1;
 };
