@@ -1,32 +1,15 @@
 /*
- ==============================================================================
- 
- SineWave.h
- Created: 13 Feb 2019 12:30:10pm
- Author:  Noah Tigner
- 
- ==============================================================================
- */
+  ==============================================================================
+
+    SynthVoice.h
+    Created: 7 Mar 2019 1:34:22am
+    Author:  Noah Tigner
+
+  ==============================================================================
+*/
 
 #pragma once
-#include "MainComponent.h"
-#include "maximilian.h"
-
-
-class SineWaveSound   : public SynthesiserSound
-//public MainComponent
-{
-    //the sound class might be where you would store data that is needed to create the sound (such as a wavetable)
-public:
-    SineWaveSound() {}
-    
-    bool appliesToNote    (int) override        { return true; }
-    bool appliesToChannel (int) override        { return true; }
-};
-
-//==============================================================================
-
-class SineWaveVoice   : public SynthesiserVoice,
+class SynthVoice   : public SynthesiserVoice,
 public Slider::Listener,
 public ComboBox::Listener
 {
@@ -114,18 +97,18 @@ public:
         }
     }
     
-    SineWaveVoice() {}
+    SynthVoice() {}
     
     
     bool canPlaySound (SynthesiserSound* sound) override
     {
-        return dynamic_cast<SineWaveSound*> (sound) != nullptr;
+        return dynamic_cast<SynthSound*> (sound) != nullptr;
     }
     
     void startNote (int midiNoteNumber, float velocity,
                     SynthesiserSound*, int /*currentPitchWheelPosition*/) override
     {
-
+        
         currentAngle = 0.0;
         level = velocity * masterLevel * noiseLevel * 0.15;
         tailOff = 0.0;
@@ -148,7 +131,7 @@ public:
         
         if (tailOff == 0.0)
             tailOff = 1.0;
-    
+        
         clearCurrentNote();
         
     }
@@ -215,4 +198,3 @@ private:
     maxiFilter filter1;
     maxiFilter filter2;
 };
-

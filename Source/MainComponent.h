@@ -9,22 +9,6 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "SynthSource.h"
-#include "SineWave.h"
-//#include "SquareWave.h"
-//#include "WaveformViewComponent.h"
-//#include "SpectralViewComponent.h"
-
-
-//==============================================================================
-/*
-    This component lives inside our window, and this is where you should put all
-    your controls and content.
-*/
-
-//==============================================================================
-
-
-
 
 class MainComponent   : public AudioAppComponent,
                         public Slider::Listener,
@@ -66,14 +50,9 @@ public:
             master = masterSlider.getValue();
         }
     }
-     
-    
 
 private:
     //==============================================================================
-    // Your private member variables go here...
-    
-    //AnalyserComponent analyzer;
     
     Random random;  //for noise
     
@@ -112,8 +91,6 @@ private:
     Label midiInputListLabel;
     int lastInputIndex = 0;
     
-    
-    
     void timerCallback() override;
     void setMidiInput(int index);
     
@@ -147,12 +124,6 @@ private:
     Label envelope;
     Label lp;
     Label hp;
-    
-
-    //WaveformViewComponent waveformView;
-    //SpectralViewComponent spectralView;
-    
-    
     //==========================================================================
     
     

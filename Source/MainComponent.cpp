@@ -8,11 +8,7 @@
 
 #include "MainComponent.h"
 #include "SynthSource.h"
-#include "SineWave.h"
-
-//==============================================================================
-
-
+#include "SynthSound.h"
 
 //==============================================================================
 MainComponent::MainComponent(): synthAudioSource  (keyboardState),
@@ -21,15 +17,6 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     // specify the number of input and output channels that we want to open
     setAudioChannels (0, 2);    //no in, 2 out
     
-    /*
-     static Identifier myNodeType ("MyNode"); // pre-create an Identifier
-     ValueTree myNode (myNodeType);           // This is a valid node, of type "MyNode"
-     */
-    
-    
-    
-    
-    //noiseTargetLevel = 0.125;
     noiseTargetLevel = 0.0;
     noiseSlider.setRange(0.0, 1.0, .001);
     noiseSlider.setValue(noiseTargetLevel, dontSendNotification);
@@ -175,10 +162,6 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     addAndMakeVisible(&hpResSlider);
     addAndMakeVisible(&hpResLabel);
     
-    
-    
-    
-    
     addAndMakeVisible (&noiseSlider);
     addAndMakeVisible (&noiseSliderLabel);
     
@@ -214,16 +197,12 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     synthChoice.addListener(&synthAudioSource);
     
     
-    
-    //createWavetable();  //should now contain 128 samples of a full sine wave cycle
-    
-    
-    
     // Make sure you set the size of the component after
     // you add any child components.
     keyboardComponent.setKeyPressBaseOctave(5);
     //keyboardComponent.setOctaveForMiddleC(2);
     addAndMakeVisible (keyboardComponent);
+    
     //addAndMakeVisible (midiInputListLabel);
     //midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
     //midiInputListLabel.attachToComponent (&midiInputList, true);
@@ -297,12 +276,6 @@ void MainComponent::releaseResources() {
 
 //==============================================================================
 void MainComponent::paint (Graphics& g) {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    //g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-    
-    // You can add your drawing code here!
-    
-    
     
     Array<Colour> colours {
         Colour (25, 25, 25),    //black
@@ -371,7 +344,8 @@ void MainComponent::paint (Graphics& g) {
     keyboardComponent.setColour(MidiKeyboardComponent::whiteNoteColourId, darkGrey);
     keyboardComponent.setColour(MidiKeyboardComponent::blackNoteColourId, black);
     keyboardComponent.setColour(MidiKeyboardComponent::upDownButtonBackgroundColourId, black);
-    keyboardComponent.setColour(MidiKeyboardComponent::keyDownOverlayColourId, offWhite);
+    keyboardComponent.setColour(MidiKeyboardComponent::keyDownOverlayColourId, blue);
+    keyboardComponent.setColour(MidiKeyboardComponent::mouseOverKeyOverlayColourId, purple);
     
     attackSliderLabel.setColour(Label::textColourId, blue);
     attackSliderLabel.setJustificationType(36);
@@ -490,53 +464,17 @@ void MainComponent::paint (Graphics& g) {
     g.fillRoundedRectangle(305, 250, 195, 150, 20);
 
     
-    //g.fillRoundedRectangle(100, 180, 195, 120, 20);
-    //g.fillRoundedRectangle(305, 180, 195, 120, 20);
-    
-    /*
-    g.setColour(purple);
-    g.drawLine(10, 310, getWidth()-10, 40);
-    g.drawLine(10, 40, getWidth()-10, 310);
-    */
-    
-    
     g.setColour(darkGrey);
     g.fillRoundedRectangle(101, 71, 398, 148, 20);
     g.fillRoundedRectangle(101, 251, 193, 148, 20);
     g.fillRoundedRectangle(306, 251, 193, 148, 20);
-    
-    /*
-    g.fillRoundedRectangle(101, 181, 193, 118, 20);
-    g.fillRoundedRectangle(306, 181, 193, 118, 20);
-     */
-    
-    /*
-    g.setColour(offWhite);
-    g.fillRect(100, 50, 100, 170);
-    
-    g.setColour(offWhite);
-    g.fillRect(300, 50, 100, 170);
-    */
 }
 
-
-
 void MainComponent::resized(){
-    // This is called when the MainContentComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
     
-    const int sliderJustification = 110;
-    const int sliderX = sliderJustification + 40;
-    const int sliderWidth = getWidth() - (sliderJustification + 10);
     const int sliderHeight = 20;
-    
     const int labelJustification = 10;
-    const int labelWidth = 90;
-    
     int y = 10;
-    
-    
 
     synthChoice.setBounds(labelJustification, y, 80, sliderHeight);
     
@@ -587,16 +525,6 @@ void MainComponent::resized(){
     
     hpResLabel.setBounds(400, 260, 100, sliderHeight);
     hpResSlider.setBounds(400, 280, 100, 100);
-    /*
-    lpResLabel.setBounds(sliderJustification+100, y, 100, sliderHeight);
-    lpResSlider.setBounds(sliderJustification+100, y+20, 100, 100);
-    
-    hpCutoffLabel.setBounds(sliderJustification+200, y, 100, sliderHeight);
-    hpCutoffSlider.setBounds(sliderJustification+200, y+20, 100, 100);
-    
-    hpResLabel.setBounds(sliderJustification+300, y, 100, sliderHeight);
-    hpResSlider.setBounds(sliderJustification+300, y+20, 100, 100);
-    */
     
     masterSlider.setBounds(95, 420, 495, sliderHeight);
     masterSliderLabel.setBounds(labelJustification, 419, 100, sliderHeight);

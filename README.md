@@ -13,17 +13,17 @@ C++14 / JUCE Framework
 
 ~~Sine Waves~~ 
 
-Square Waves 
+~~Square Waves~~
 
-Saw Waves 
+~~Saw Waves~~
 
-Triangle Waves 
+~~Triangle Waves~~
 
 ~~Noise~~ 
 
-Envelope (ADSR) 
+~~Envelope (ADSR)~~
 
-Filter 
+~~Filter~~ 
 
 Effects... 
 	 
