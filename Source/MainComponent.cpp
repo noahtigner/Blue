@@ -33,12 +33,12 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     noiseTargetLevel = 0.0;
     noiseSlider.setRange(0.0, 1.0, .001);
     noiseSlider.setValue(noiseTargetLevel, dontSendNotification);
-    noiseSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+    noiseSlider.setTextBoxStyle(Slider::TextBoxRight, false, 80, 20);
     noiseSlider.onValueChange = [this] {
         noiseTargetLevel = noiseSlider.getValue();
         noiseSamplesToTarget = noiseRampLengthSamples;
     };
-    noiseSliderLabel.setText("Level", dontSendNotification);
+    //noiseSliderLabel.setText("Level", dontSendNotification);
     synthAudioSource.noiseSlider = &noiseSlider;
     noiseSlider.addListener(&synthAudioSource);
     
@@ -51,7 +51,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
         leftSamplesToTarget = leftRampLengthSamples;
     };
     leftSlider.addListener(this);   //make MC a listener
-    leftSliderLabel.setText("Left Level", dontSendNotification);
+    leftSliderLabel.setText("Left", dontSendNotification);
     //leftSlider.setSkewFactorFromMidPoint(0.5);
     synthAudioSource.leftSlider = &leftSlider;
     leftSlider.addListener(&synthAudioSource);
@@ -66,7 +66,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
         rightSamplesToTarget = rightRampLengthSamples;
     };
     rightSlider.addListener(this);
-    rightSliderLabel.setText("Right Level", dontSendNotification);
+    rightSliderLabel.setText("Right", dontSendNotification);
     synthAudioSource.rightSlider = &rightSlider;
     rightSlider.addListener(&synthAudioSource);
     
@@ -74,7 +74,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     masterTargetLevel = 0.5f;
     masterSlider.setRange(0.0, 1.0, .001);
     masterSlider.setValue(masterTargetLevel, dontSendNotification);
-    masterSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+    masterSlider.setTextBoxStyle(Slider::TextBoxRight, false, 80, 20);
     masterSlider.onValueChange = [this] {
         masterTargetLevel = masterSlider.getValue();
         masterSamplesToTarget = masterRampLengthSamples;
@@ -247,7 +247,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     
     //setWantsKeyboardFocus(true);
     
-    setSize (600, 500);
+    setSize (600, 550);
 }
 
 MainComponent::~MainComponent() {
@@ -331,25 +331,33 @@ void MainComponent::paint (Graphics& g) {
     noiseSlider.setColour(Slider::trackColourId, purple);
     noiseSlider.setColour(Slider::textBoxTextColourId, blue);
     noiseSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    noiseSlider.setTextBoxStyle(Slider::TextBoxRight, false, 80, 20);
     
     leftSliderLabel.setColour(Label::textColourId, blue);
+    leftSliderLabel.setJustificationType(36);
     leftSlider.setColour(Slider::thumbColourId, blue);
     leftSlider.setColour(Slider::trackColourId, purple);
     leftSlider.setColour(Slider::textBoxTextColourId, blue);
     leftSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    leftSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 80, 20);
+    leftSlider.setSliderStyle(Slider::LinearVertical);
     
     rightSliderLabel.setColour(Label::textColourId, blue);
+    rightSliderLabel.setJustificationType(36);
     rightSlider.setColour(Slider::thumbColourId, blue);
     rightSlider.setColour(Slider::trackColourId, purple);
     rightSlider.setColour(Slider::textBoxTextColourId, blue);
     rightSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    rightSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 80, 20);
+    rightSlider.setSliderStyle(Slider::LinearVertical);
     
     
     masterSliderLabel.setColour(Label::textColourId, blue);
+    //masterSliderLabel.setJustificationType(1);
     masterSlider.setColour(Slider::thumbColourId, purple);
     masterSlider.setColour(Slider::trackColourId, blue);
     masterSlider.setColour(Slider::textBoxTextColourId, blue);
-    masterSlider.setColour(Slider::textBoxOutlineColourId, blue);
+    masterSlider.setColour(Slider::textBoxOutlineColourId, purple);
     
     synthChoiceLabel.setColour(Label::textColourId, blue);
     synthChoiceLabel.setColour(Label::outlineColourId, purple);
@@ -373,6 +381,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     attackSlider.setColour(Slider::textBoxTextColourId, blue);
     attackSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    attackSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     attackSlider.setSliderStyle(Slider::Rotary);
 
     decaySliderLabel.setColour(Label::textColourId, blue);
@@ -383,6 +392,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     decaySlider.setColour(Slider::textBoxTextColourId, blue);
     decaySlider.setColour(Slider::textBoxOutlineColourId, purple);
+    decaySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     decaySlider.setSliderStyle(Slider::Rotary);
     
     sustainSliderLabel.setColour(Label::textColourId, blue);
@@ -393,6 +403,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     sustainSlider.setColour(Slider::textBoxTextColourId, blue);
     sustainSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    sustainSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     sustainSlider.setSliderStyle(Slider::Rotary);
 
     releaseSliderLabel.setColour(Label::textColourId, blue);
@@ -403,6 +414,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     releaseSlider.setColour(Slider::textBoxTextColourId, blue);
     releaseSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    releaseSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     releaseSlider.setSliderStyle(Slider::Rotary);
     
     lpCutoffLabel.setColour(Label::textColourId, blue);
@@ -413,6 +425,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     lpCutoffSlider.setColour(Slider::textBoxTextColourId, blue);
     lpCutoffSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    lpCutoffSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     lpCutoffSlider.setSliderStyle(Slider::Rotary);
     
     lpResLabel.setColour(Label::textColourId, blue);
@@ -423,6 +436,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     lpResSlider.setColour(Slider::textBoxTextColourId, blue);
     lpResSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    lpResSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     lpResSlider.setSliderStyle(Slider::Rotary);
     
     hpCutoffLabel.setColour(Label::textColourId, blue);
@@ -433,6 +447,7 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     hpCutoffSlider.setColour(Slider::textBoxTextColourId, blue);
     hpCutoffSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    hpCutoffSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     hpCutoffSlider.setSliderStyle(Slider::Rotary);
     
     hpResLabel.setColour(Label::textColourId, blue);
@@ -443,19 +458,65 @@ void MainComponent::paint (Graphics& g) {
     //attackSlider.setColour(Slider::rotarySliderOutlineColourId, trackGrey);
     hpResSlider.setColour(Slider::textBoxTextColourId, blue);
     hpResSlider.setColour(Slider::textBoxOutlineColourId, purple);
+    hpResSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 60, 20);
     hpResSlider.setSliderStyle(Slider::Rotary);
     
-    g.setColour(blue);
-    g.fillRoundedRectangle(110, 130, 400, 130, 20);
+    envelope.setText("Envelope", dontSendNotification);
+    envelope.setColour(Label::textColourId, darkGrey);
+    envelope.setJustificationType(36);
+    addAndMakeVisible(&envelope);
     
-    g.fillRoundedRectangle(110, 260, 200, 130, 20);
-    g.fillRoundedRectangle(310, 260, 200, 130, 20);
+    lp.setText("Lowpass", dontSendNotification);
+    lp.setColour(Label::textColourId, darkGrey);
+    lp.setJustificationType(36);
+    addAndMakeVisible(&lp);
+    
+    hp.setText("Highpass", dontSendNotification);
+    hp.setColour(Label::textColourId, darkGrey);
+    hp.setJustificationType(36);
+    addAndMakeVisible(&hp);
+    
+    g.setColour(blue);  //Partitions
+    g.drawLine(10, 40, getWidth()-10, 40);
+    g.drawLine(10, 410, getWidth()-10, 410);
+    
+    g.fillRoundedRectangle(100, 50, 150, 60, 20);
+    g.fillRoundedRectangle(100, 70, 400, 150, 20);
+
+    g.fillRoundedRectangle(100, 230, 150, 60, 20);
+    g.fillRoundedRectangle(100, 250, 195, 150, 20);
+    
+    g.fillRoundedRectangle(305, 230, 150, 60, 20);
+    g.fillRoundedRectangle(305, 250, 195, 150, 20);
+
+    
+    //g.fillRoundedRectangle(100, 180, 195, 120, 20);
+    //g.fillRoundedRectangle(305, 180, 195, 120, 20);
+    
+    /*
+    g.setColour(purple);
+    g.drawLine(10, 310, getWidth()-10, 40);
+    g.drawLine(10, 40, getWidth()-10, 310);
+    */
+    
     
     g.setColour(darkGrey);
-    g.fillRoundedRectangle(111, 131, 398, 128, 20);
+    g.fillRoundedRectangle(101, 71, 398, 148, 20);
+    g.fillRoundedRectangle(101, 251, 193, 148, 20);
+    g.fillRoundedRectangle(306, 251, 193, 148, 20);
     
-    g.fillRoundedRectangle(111, 261, 198, 128, 20);
-    g.fillRoundedRectangle(311, 261, 198, 128, 20);
+    /*
+    g.fillRoundedRectangle(101, 181, 193, 118, 20);
+    g.fillRoundedRectangle(306, 181, 193, 118, 20);
+     */
+    
+    /*
+    g.setColour(offWhite);
+    g.fillRect(100, 50, 100, 170);
+    
+    g.setColour(offWhite);
+    g.fillRect(300, 50, 100, 170);
+    */
 }
 
 
@@ -476,44 +537,57 @@ void MainComponent::resized(){
     int y = 10;
     
     
-    //synthChoice.setBounds(labelJustification, 30, labelWidth, sliderHeight);
-    //synthChoiceLabel.attachToComponent(&synthChoice, false);
-    //synthChoiceLabel.setBounds(labelJustification, 10, labelWidth, sliderHeight);
-    synthChoice.setBounds(labelJustification, y, labelWidth, sliderHeight);
-    
-    noiseSlider.setBounds (sliderX, y, sliderWidth-40, sliderHeight);   //x, y, width, height
-    noiseSliderLabel.setBounds (sliderJustification+1, y, 40, sliderHeight);
-    
-    leftSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
-    leftSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
-    
-    rightSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
-    rightSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
-    
-    masterSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
-    masterSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
-    
-    //tree->testSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
-    
-    attackSliderLabel.setBounds(sliderJustification, y+=30, 100, sliderHeight);
-    attackSlider.setBounds(sliderJustification, y+20, 100, 100);
 
-    decaySliderLabel.setBounds(sliderJustification + 100, y, 100, sliderHeight);
-    decaySlider.setBounds(sliderJustification + 100, y+20, 100, 100);
+    synthChoice.setBounds(labelJustification, y, 80, sliderHeight);
     
-    sustainSliderLabel.setBounds(sliderJustification + 200, y, 100, sliderHeight);
-    sustainSlider.setBounds(sliderJustification + 200, y+20, 100, 100);
+    noiseSlider.setBounds(95, y, 495, sliderHeight);   //x, y, width, height
+    //noiseSliderLabel.setBounds(100, y, 40, sliderHeight);
     
-    releaseSliderLabel.setBounds(sliderJustification + 300, y, 100, sliderHeight);
-    releaseSlider.setBounds(sliderJustification + 300, y+20, 100, 100);
+    //leftSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
+    //leftSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
     
+    leftSlider.setBounds(20, 50, 60, 340);
+    leftSliderLabel.setBounds(20, 385, 60, 20);
+    
+    rightSlider.setBounds(getWidth()-80, 50, 60, 340);
+    rightSliderLabel.setBounds(getWidth()-80, 385, 60, 20);
+    
+    
+    //rightSlider.setBounds(sliderJustification, y+=30, sliderWidth, sliderHeight);
+    //rightSliderLabel.setBounds(labelJustification, y, labelWidth, sliderHeight);
+
+    envelope.setBounds(135, 50, 80, 20);
+    
+    attackSliderLabel.setBounds(100, 80, 100, sliderHeight);
+    attackSlider.setBounds(100, 100, 100, 100);
+    
+    decaySliderLabel.setBounds(200, 80, 100, sliderHeight);
+    decaySlider.setBounds(200, 100, 100, 100);
+    
+    lp.setBounds(135, 230, 80, 20);
+    sustainSliderLabel.setBounds(300 , 80, 100, sliderHeight);
+    sustainSlider.setBounds(300, 100, 100, 100);
+    
+    hp.setBounds(340, 230, 80, 20);
+    releaseSliderLabel.setBounds(400, 80, 100, sliderHeight);
+    releaseSlider.setBounds(400, 100, 100, 100);
+ 
     
     //===========================================
     
     
-    lpCutoffLabel.setBounds(sliderJustification, y+=130, 100, sliderHeight);
-    lpCutoffSlider.setBounds(sliderJustification, y+20, 100, 100);
+    lpCutoffLabel.setBounds(100, 260, 100, sliderHeight);
+    lpCutoffSlider.setBounds(100, 280, 100, 100);
     
+    lpResLabel.setBounds(200, 260, 100, sliderHeight);
+    lpResSlider.setBounds(200, 280, 100, 100);
+    
+    hpCutoffLabel.setBounds(300, 260, 100, sliderHeight);
+    hpCutoffSlider.setBounds(300, 280, 100, 100);
+    
+    hpResLabel.setBounds(400, 260, 100, sliderHeight);
+    hpResSlider.setBounds(400, 280, 100, 100);
+    /*
     lpResLabel.setBounds(sliderJustification+100, y, 100, sliderHeight);
     lpResSlider.setBounds(sliderJustification+100, y+20, 100, 100);
     
@@ -522,9 +596,12 @@ void MainComponent::resized(){
     
     hpResLabel.setBounds(sliderJustification+300, y, 100, sliderHeight);
     hpResSlider.setBounds(sliderJustification+300, y+20, 100, 100);
+    */
     
-    //midiInputList.setBounds(200, y+=30, getWidth() - 210, 20);
-    keyboardComponent.setBounds(labelJustification, y+=200, getWidth() - 20, 100);
+    masterSlider.setBounds(95, 420, 495, sliderHeight);
+    masterSliderLabel.setBounds(labelJustification, 419, 100, sliderHeight);
+    
+    keyboardComponent.setBounds(10, 450, getWidth() - 20, 90);
     
     
     

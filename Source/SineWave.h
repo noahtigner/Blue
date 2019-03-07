@@ -46,11 +46,9 @@ public:
     Slider *hpCutoffSlider;
     Slider *hpResSlider;
     
-    
     void sliderValueChanged(Slider *slider) override {
         if(slider == masterSlider) {
             masterLevel = masterSlider->getValue();
-            //std::cout << "hey";
         }
         else if(slider == leftSlider) {
             leftLevel = leftSlider->getValue();
@@ -75,7 +73,6 @@ public:
         }
         else if(slider == lpCutoffSlider) {
             lpCutoff = lpCutoffSlider->getValue();
-            //std::cout<<"here"<<endl;
         }
         else if(slider == lpResSlider) {
             lpResonance = lpResSlider->getValue();
@@ -86,13 +83,6 @@ public:
         else if(slider == hpResSlider) {
             hpResonance = hpResSlider->getValue();
         }
-        
-        /*
-        if(slider == masterSlider) {
-            //master = masterSlider->getValue();
-            std::cout << "hey";
-        }
-        */
     }
     
     void comboBoxChanged(ComboBox *box) override{
@@ -175,15 +165,6 @@ public:
         env1.setSustain(sustainLevel);
         env1.setRelease(releaseLevel);
         
-        /*
-        env1.setDecay(500);
-        env1.setSustain(0.8);
-        env1.setRelease(2000);
-         */
-        
-        //sinewave, square, pulse(freq, duty), saw, sawn, triangle
-        
-        
         for(int sample = 0; sample< numSamples; sample++) {
             
             wave = osc1.sinewave(frequency);
@@ -209,7 +190,6 @@ public:
             }
             ++startSample;
         }
-        
     }
     
 private:

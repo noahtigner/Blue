@@ -144,6 +144,10 @@ private:
     Slider hpResSlider;
     Label hpResLabel;
     
+    Label envelope;
+    Label lp;
+    Label hp;
+    
 
     //WaveformViewComponent waveformView;
     //SpectralViewComponent spectralView;
