@@ -31,7 +31,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     
     //noiseTargetLevel = 0.125;
     noiseTargetLevel = 0.0;
-    noiseSlider.setRange(0.0, 1.0);
+    noiseSlider.setRange(0.0, 1.0, .001);
     noiseSlider.setValue(noiseTargetLevel, dontSendNotification);
     noiseSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     noiseSlider.onValueChange = [this] {
@@ -43,7 +43,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     noiseSlider.addListener(&synthAudioSource);
     
     leftTargetLevel = 0.5f;
-    leftSlider.setRange(0.0, 1);
+    leftSlider.setRange(0.0, 1, .001);
     leftSlider.setValue(leftTargetLevel, dontSendNotification);
     leftSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     leftSlider.onValueChange = [this] {
@@ -57,7 +57,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     leftSlider.addListener(&synthAudioSource);
     
     rightTargetLevel = 0.5f;
-    rightSlider.setRange(0.0, 1);
+    rightSlider.setRange(0.0, 1, .001);
     rightSlider.setValue(leftSlider.getValue());
     rightSlider.setValue(rightTargetLevel, dontSendNotification);
     rightSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
@@ -72,7 +72,7 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     
     
     masterTargetLevel = 0.5f;
-    masterSlider.setRange(0.0, 1.0);
+    masterSlider.setRange(0.0, 1.0, .001);
     masterSlider.setValue(masterTargetLevel, dontSendNotification);
     masterSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     masterSlider.onValueChange = [this] {
@@ -89,58 +89,63 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     //tree->testSlider.addListener(this);
     //addAndMakeVisible(&tree->testSlider);
     
-    attackSlider.setRange(0, 10000);
+    attackSlider.setRange(0, 5000, 1);
     attackSlider.setValue(500, dontSendNotification);
     attackSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     attackSlider.addListener(this);
     attackSliderLabel.setText("Attack", dontSendNotification);
+    attackSlider.setTextValueSuffix("ms");
     synthAudioSource.attackSlider = &attackSlider;
     attackSlider.addListener(&synthAudioSource);
     addAndMakeVisible(&attackSlider);
     addAndMakeVisible(&attackSliderLabel);
     
-    decaySlider.setRange(0, 10000);
+    decaySlider.setRange(0, 5000, 1);
     decaySlider.setValue(500, dontSendNotification);
     decaySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     decaySlider.addListener(this);
     decaySliderLabel.setText("Decay", dontSendNotification);
+    decaySlider.setTextValueSuffix("ms");
     synthAudioSource.decaySlider = &decaySlider;
     decaySlider.addListener(&synthAudioSource);
     addAndMakeVisible(&decaySlider);
     addAndMakeVisible(&decaySliderLabel);
     
-    sustainSlider.setRange(0.0, 1.0);
+    sustainSlider.setRange(0.0, 1.0, .01);
     sustainSlider.setValue(.8, dontSendNotification);
     sustainSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     sustainSlider.addListener(this);
     sustainSliderLabel.setText("Sustain", dontSendNotification);
+    //sustainSlider.setTextValueSuffix("ms");
     synthAudioSource.sustainSlider = &sustainSlider;
     sustainSlider.addListener(&synthAudioSource);
     addAndMakeVisible(&sustainSlider);
     addAndMakeVisible(&sustainSliderLabel);
     
-    releaseSlider.setRange(0, 10000);
+    releaseSlider.setRange(0, 5000, 1);
     releaseSlider.setValue(500, dontSendNotification);
     releaseSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     releaseSlider.addListener(this);
     releaseSliderLabel.setText("Release", dontSendNotification);
+    releaseSlider.setTextValueSuffix("ms");
     synthAudioSource.releaseSlider = &releaseSlider;
     releaseSlider.addListener(&synthAudioSource);
     addAndMakeVisible(&releaseSlider);
     addAndMakeVisible(&releaseSliderLabel);
     
-    lpCutoffSlider.setRange(10, 30000);
-    lpCutoffSlider.setValue(10);
+    lpCutoffSlider.setRange(100, 8000, 1);
+    lpCutoffSlider.setValue(8000, dontSendNotification);
     lpCutoffSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     lpCutoffSlider.addListener(this);
     lpCutoffLabel.setText("Cutoff", dontSendNotification);
+    lpCutoffSlider.setTextValueSuffix("Hz");
     synthAudioSource.lpCutoffSlider = &lpCutoffSlider;
     lpCutoffSlider.addListener(&synthAudioSource);
     addAndMakeVisible(&lpCutoffSlider);
     addAndMakeVisible(&lpCutoffLabel);
     
-    lpResSlider.setRange(1.0, 10.0);
-    lpResSlider.setValue(1.0);
+    lpResSlider.setRange(1.0, 10.0, .01);
+    lpResSlider.setValue(1.0, dontSendNotification);
     lpResSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     lpResSlider.addListener(this);
     lpResLabel.setText("Resonance", dontSendNotification);
@@ -149,18 +154,19 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     addAndMakeVisible(&lpResSlider);
     addAndMakeVisible(&lpResLabel);
     
-    hpCutoffSlider.setRange(10, 30000);
-    hpCutoffSlider.setValue(10);
+    hpCutoffSlider.setRange(100, 2000, 1);
+    hpCutoffSlider.setValue(100, dontSendNotification);
     hpCutoffSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     hpCutoffSlider.addListener(this);
     hpCutoffLabel.setText("Cutoff", dontSendNotification);
-    synthAudioSource.lpCutoffSlider = &hpCutoffSlider;
+    hpCutoffSlider.setTextValueSuffix("Hz");
+    synthAudioSource.hpCutoffSlider = &hpCutoffSlider;
     hpCutoffSlider.addListener(&synthAudioSource);
     addAndMakeVisible(&hpCutoffSlider);
     addAndMakeVisible(&hpCutoffLabel);
     
-    hpResSlider.setRange(1.0, 10.0);
-    hpResSlider.setValue(1.0);
+    hpResSlider.setRange(1.0, 10.0, .01);
+    hpResSlider.setValue(1.0, dontSendNotification);
     hpResSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     hpResSlider.addListener(this);
     hpResLabel.setText("Resonance", dontSendNotification);
@@ -194,13 +200,13 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     synthChoice.addItem("Square", 2);
     synthChoice.setItemEnabled(2, true);
     synthChoice.addItem("Saw", 3);
-    synthChoice.setItemEnabled(3, false);
+    synthChoice.setItemEnabled(3, true);
     synthChoice.addItem("Triangle", 4);
-    synthChoice.setItemEnabled(4, false);
+    synthChoice.setItemEnabled(4, true);
     addAndMakeVisible(synthChoice);
     synthChoice.addSeparator();
     synthChoice.addItem("Noise", 5);
-    synthChoice.setItemEnabled(5, false);
+    synthChoice.setItemEnabled(5, true);
     
     synthChoice.onChange = [this] {synthChoiceChanged(); };
     synthChoice.setSelectedId(1);
@@ -215,7 +221,8 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     
     // Make sure you set the size of the component after
     // you add any child components.
-    
+    keyboardComponent.setKeyPressBaseOctave(5);
+    //keyboardComponent.setOctaveForMiddleC(2);
     addAndMakeVisible (keyboardComponent);
     //addAndMakeVisible (midiInputListLabel);
     //midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
@@ -235,9 +242,10 @@ keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
     }
     if (midiInputList.getSelectedId() == 0)
         setMidiInput (0);
+    
     //keyboardComponent.setAvailableRange(24, 103);
     
-    setWantsKeyboardFocus(true);
+    //setWantsKeyboardFocus(true);
     
     setSize (600, 500);
 }
@@ -272,66 +280,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) {
     // Your audio-processing code goes here!
-    
-    /*
-     //Noise Block
-     auto noiseLevel = (float) noiseSlider.getValue();
-     auto leftLevel = (float) leftSlider.getValue();
-     auto rightLevel = (float) rightSlider.getValue();
-     auto masterLevel = (float) masterSlider.getValue();
-     
-     auto levelScale = noiseLevel * 2.0f;
-     auto sample = 0;
-     
-     
-     #warning TODO
-     
-     auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-     auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
-     
-     switch(synthChoice.getSelectedId()) {
-     
-     case 1: //Noise
-     for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-     leftBuffer[sample] = random.nextFloat() * leftLevel * (levelScale - noiseLevel) * masterLevel;
-     rightBuffer[sample] = random.nextFloat() * rightLevel * (levelScale - noiseLevel) * masterLevel;
-     }
-     break;
-     
-     case 3: //Square
-     auto f = 1.0f; //f, frequency
-     auto A = 0.75f;  //A, peak amplitude
-     auto phase = 0.0f;
-     auto pi = 3.14159265358979323846f;
-     
-     for(sample = 0; sample < bufferToFill.numSamples; sample++) {
-     if(phase<pi) {
-     leftBuffer[sample] = A * leftLevel * noiseLevel * masterLevel;
-     rightBuffer[sample] = A * rightLevel * noiseLevel * masterLevel;
-     }
-     else {
-     leftBuffer[sample] = (0.0f-A) * leftLevel * noiseLevel * masterLevel;
-     rightBuffer[sample] = (0.0f-A) * rightLevel  * noiseLevel * masterLevel;
-     }
-     
-     phase = phase + ((2*pi*f) / bufferToFill.numSamples);
-     
-     if(phase>(2*pi)) {
-     phase = phase - (2*pi);
-     }
-     }
-     break;
-     }
-     synthChoice.setItemEnabled(2, false);
-     synthChoice.setItemEnabled(4, false);
-     synthChoice.setItemEnabled(5, false);
-     
-     */
-    
-    //Wavetable synthesis
-    
-    //synthAudioSource.setLevel((float) noiseSlider.getValue(), (float) masterSlider.getValue());
-    synthAudioSource.getNextAudioBlock (bufferToFill);
+    synthAudioSource.getNextAudioBlock(bufferToFill);
 }
 
 

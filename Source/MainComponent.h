@@ -101,23 +101,6 @@ private:
     float masterRampLengthSamples;
     int masterSamplesToTarget;
     
-    /*
-    Array<Colour> colours {
-        Colour (25, 25, 25),    //black
-        Colour (33, 33, 33),    //darkGrey
-        Colour (255, 255, 255), //white
-        Colour (232, 229, 229), //offWhite
-        Colour (191, 191, 191), //gray
-        Colour (15, 199, 149),  //blue
-        Colour (63, 33, 89)     //purple
-    }; */
-    
-    /*
-    Synthesiser mySynth;
-    SynthVoice* myVoice;
-    double lastSampleRate;
-     */
-    
     Label synthChoiceLabel{{}, "Synth: "};
     ComboBox synthChoice;
     
@@ -156,6 +139,7 @@ private:
     
     Slider hpCutoffSlider;
     Label hpCutoffLabel;
+    
     
     Slider hpResSlider;
     Label hpResLabel;

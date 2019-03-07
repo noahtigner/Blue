@@ -73,6 +73,26 @@ public:
         else if(slider == releaseSlider) {
             releaseLevel = releaseSlider->getValue();
         }
+        else if(slider == lpCutoffSlider) {
+            lpCutoff = lpCutoffSlider->getValue();
+            //std::cout<<"here"<<endl;
+        }
+        else if(slider == lpResSlider) {
+            lpResonance = lpResSlider->getValue();
+        }
+        else if(slider == hpCutoffSlider) {
+            hpCutoff = hpCutoffSlider->getValue();
+        }
+        else if(slider == hpResSlider) {
+            hpResonance = hpResSlider->getValue();
+        }
+        
+        /*
+        if(slider == masterSlider) {
+            //master = masterSlider->getValue();
+            std::cout << "hey";
+        }
+        */
     }
     
     void comboBoxChanged(ComboBox *box) override{
@@ -89,6 +109,16 @@ public:
                     waveType = 2;
                     break;
                 case 3:
+                    std::cout<<"Saw";
+                    waveType = 3;
+                    break;
+                case 4:
+                    std::cout<<"Triangle";
+                    waveType = 4;
+                    break;
+                case 5:
+                    std::cout<<"Noise";
+                    waveType = 5;
                     break;
             }
         }
@@ -105,7 +135,7 @@ public:
     void startNote (int midiNoteNumber, float velocity,
                     SynthesiserSound*, int /*currentPitchWheelPosition*/) override
     {
-#warning !wavetable
+
         currentAngle = 0.0;
         level = velocity * masterLevel * noiseLevel * 0.15;
         tailOff = 0.0;
@@ -157,20 +187,22 @@ public:
         for(int sample = 0; sample< numSamples; sample++) {
             
             wave = osc1.sinewave(frequency);
-            /*
-            switch(waveType) {
-                case 1: std::cout<<"Here";
-                    wave = osc1.sinewave(frequency);
-                    break;
-                case 2: std::cout<<"There";
-                    wave = osc1.square(frequency);
-                    break;
-            }*/
             
-            //double theWave = osc1.sinewave(frequency);
+            switch(waveType) {
+                case 1: wave = osc1.sinewave(frequency);
+                    break;
+                case 2: wave = osc1.square(frequency);
+                    break;
+                case 3: wave = osc1.sawn(frequency);
+                    break;
+                case 4: wave = osc1.triangle(frequency);
+                    break;
+                case 5: wave = osc1.noise();
+                    break;
+            }
             double theSound = env1.adsr(wave, env1.trigger) * level;
             double lowpass = filter1.lores(theSound, lpCutoff, lpResonance);
-            double highpass = filter1.hires(lowpass, hpCutoff, hpResonance);
+            double highpass = filter2.hires(lowpass, hpCutoff, hpResonance);
             
             for(int channel = 0; channel < outputBuffer.getNumChannels(); channel++) {
                 outputBuffer.addSample(channel, startSample, highpass);
@@ -178,60 +210,6 @@ public:
             ++startSample;
         }
         
-        /*
-        if (angleDelta != 0.0)
-        {
-            if (tailOff > 0.0) //When the key has been released the tailOff value will be greater than zero. You can see the synthesis algorithm is similar
-            {
-                while (--numSamples >= 0)
-                {
-                    
-         
-                    
-                    double lrSample = osc1.sinewave(440) * level * tailOff;
-                    
-                    outputBuffer.addSample (0, startSample, lrSample);
-                    outputBuffer.addSample (1, startSample, lrSample);
-                    
-         
-                    //auto leftSample = (float) (std::sin (currentAngle)  * level * leftLevel * tailOff);
-                    //auto rightSample = (float) (std::sin (currentAngle)  * level * rightLevel * tailOff);
-                    //outputBuffer.addSample (0, startSample, leftSample);
-                    //outputBuffer.addSample (1, startSample, rightSample);
-         
-                    
-                    
-                    currentAngle += angleDelta;
-                    ++startSample;
-                    
-                    tailOff *= 0.99; //simple exponential decay envelope shape
-                    
-                    if (tailOff <= 0.005)
-                    {
-                        clearCurrentNote(); //When the tailOff value is small we determine that the voice has ended. We must call the SynthesiserVoice::clearCurrentNote() function at this point so that the voice is reset and available to be reused
-                        
-                        angleDelta = 0.0;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                while (--numSamples >= 0) //This loop is used for the normal state of the voice, while the key is being held down. Notice that we use the AudioSampleBuffer::addSample() function, which mixes the currentSample value with the value alread at index startSample. This is because the synthesiser will be iterating over all of the voices. It is the responsibility of each voice to mix its output with the current contents of the buffer
-                {
-         
-                    
-               
-        
-                   
-                    currentAngle += angleDelta;
-                    ++startSample;
-                    
-                }
-            }
-        
-        }
-        */
     }
     
 private:
@@ -246,14 +224,15 @@ private:
     int waveType = 1;
     double wave;
     
-    double lpCutoff = 0.0;
-    double lpResonance = 0.0;
+    int lpCutoff = 8000;
+    double lpResonance = 1.0;
     
-    double hpCutoff = 0.0;
-    double hpResonance = 0.0;
+    double hpCutoff = 100;
+    double hpResonance = 1.0;
     
     maxiOsc osc1;
     maxiEnv env1;
     maxiFilter filter1;
+    maxiFilter filter2;
 };
 

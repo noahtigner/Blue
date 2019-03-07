@@ -56,6 +56,8 @@ public:
                     sineVoices[i] = new SineWaveVoice();
                     //sineVoices[i]->masterSlider = masterSlider;
                     //masterSlider->addListener(sineVoices[i]);
+                    
+                    
                     synth.addVoice(sineVoices[i]);
                 }
                 break;
@@ -88,8 +90,10 @@ public:
     void comboBoxChanged(ComboBox *box) override{
         for(int i = 0; i < 4; i++) {
             //===//
+            
             sineVoices[i]->synthChoice = synthChoice;
             synthChoice->addListener(sineVoices[i]);
+            
         }
         
         if(box == synthChoice) {
@@ -110,6 +114,7 @@ public:
     void sliderValueChanged(Slider *slider) override {
         
         for(int i = 0; i < 4; i++) {
+            
             sineVoices[i]->masterSlider = masterSlider;
             masterSlider->addListener(sineVoices[i]);
             
@@ -134,7 +139,23 @@ public:
             
             sineVoices[i]->releaseSlider = releaseSlider;
             releaseSlider->addListener(sineVoices[i]);
+            
+            sineVoices[i]->lpCutoffSlider = lpCutoffSlider;
+            lpCutoffSlider->addListener(sineVoices[i]);
+            
+            sineVoices[i]->lpResSlider = lpResSlider;
+            lpResSlider->addListener(sineVoices[i]);
+            
+            //std::cout<<hpCutoffSlider->getValue();
+            sineVoices[i]->hpCutoffSlider = hpCutoffSlider;
+            hpCutoffSlider->addListener(sineVoices[i]);
+            
+            sineVoices[i]->hpResSlider = hpResSlider;
+            hpResSlider->addListener(sineVoices[i]);
+            
+            
         }
+    
         
         
         /*
@@ -153,10 +174,7 @@ public:
         
         
         
-        if(slider == masterSlider) {
-            //master = masterSlider->getValue();
-            std::cout << "hey";
-        }
+        
     }
     
     
