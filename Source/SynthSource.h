@@ -17,10 +17,9 @@
 class SynthAudioSource: public AudioSource,
 public Slider::Listener,
 public ComboBox::Listener
-
 {
-public:
     
+public:
     Slider *noiseSlider;
     Slider *leftSlider;
     Slider *rightSlider;
@@ -38,21 +37,9 @@ public:
     SynthAudioSource(MidiKeyboardState& keyState):
     keyboardState (keyState)
     {
-        /*
-         //for (auto i = 0; i < 4; ++i) {       //number of voices added determines the polyphony
-   
-         */
-        switch(synthType) {
-            case 1:
-                for(int i = 0; i < 4; i++) {    //4 polyphony
-                    Voices[i] = new SynthVoice();
-                    //sineVoices[i]->masterSlider = masterSlider;
-                    //masterSlider->addListener(sineVoices[i]);
-                    
-                    
-                    synth.addVoice(Voices[i]);
-                }
-                break;
+        for(int i = 0; i < 4; i++) {    //4 polyphony
+            Voices[i] = new SynthVoice();
+            synth.addVoice(Voices[i]);
         }
         synth.addSound (new SynthSound());
     }

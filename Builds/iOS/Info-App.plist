@@ -7,10 +7,12 @@
     <true/>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
     <key>CFBundleExecutable</key>
     <string>${EXECUTABLE_NAME}</string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.Blue</string>
+    <string>com.NoahTigner.Blue</string>
     <key>CFBundleName</key>
     <string>Blue</string>
     <key>CFBundleDisplayName</key>
@@ -20,9 +22,9 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>0.5</string>
     <key>CFBundleVersion</key>
-    <string>1.0.0</string>
+    <string>0.5</string>
     <key>NSHumanReadableCopyright</key>
     <string></string>
     <key>NSHighResolutionCapable</key>

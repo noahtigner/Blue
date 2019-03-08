@@ -14,7 +14,6 @@ public Slider::Listener,
 public ComboBox::Listener
 {
 public:
-    
     Slider *noiseSlider;
     Slider *leftSlider;
     Slider *rightSlider;
@@ -30,6 +29,7 @@ public:
     Slider *hpResSlider;
     
     void sliderValueChanged(Slider *slider) override {
+
         if(slider == masterSlider) {
             masterLevel = masterSlider->getValue();
         }
@@ -108,12 +108,7 @@ public:
                     SynthesiserSound*, int /*currentPitchWheelPosition*/) override
     {
         
-        //currentAngle = 0.0;
         level = velocity * masterLevel * noiseLevel * 0.15;
-        
-        //auto cyclesPerSecond = MidiMessage::getMidiNoteInHertz (midiNoteNumber);
-        //auto cyclesPerSample = cyclesPerSecond / getSampleRate();
-        //angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
         
         frequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         
@@ -131,7 +126,6 @@ public:
     
     void renderNextBlock (AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override {
         
-        //env1.setAttack(2000);   //2 seconds
         env1.setAttack(attackLevel);
         env1.setDecay(decayLevel);
         env1.setSustain(sustainLevel);
@@ -156,9 +150,9 @@ public:
                     break;
             }
             
-            double rawSound = env1.adsr(wave, env1.trigger);
-            double lowpassedSound = filter1.lores(rawSound, lpCutoff, lpResonance);
-            double highpassedSound = filter2.hires(lowpassedSound, hpCutoff, hpResonance);
+            rawSound = env1.adsr(wave, env1.trigger);
+            lowpassedSound = filter1.lores(rawSound, lpCutoff, lpResonance);
+            highpassedSound = filter2.hires(lowpassedSound, hpCutoff, hpResonance);
             
             leftOut = highpassedSound * level * leftLevel;
             rightOut = highpassedSound * level * rightLevel;
@@ -166,19 +160,15 @@ public:
             
             for(channel = 0; channel < numChannels; channel++) {
                 if(channel == 0) {
-                    outputBuffer.addSample(channel++, startSample, leftOut);
+                    outputBuffer.addSample(channel, startSample, leftOut);
                 }
                 else if(channel == 1) {
-                    outputBuffer.addSample(channel++, startSample, rightOut);
+                    outputBuffer.addSample(channel, startSample, rightOut);
                 }
                 else {
                     outputBuffer.addSample(channel, startSample, Out);
                 }
             }
-            /*
-            for(int channel = 0; channel < outputBuffer.getNumChannels(); channel++) {
-                outputBuffer.addSample(channel, startSample, highpass);
-            }*/
             ++startSample;
         }
     }
