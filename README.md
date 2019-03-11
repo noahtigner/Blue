@@ -4,11 +4,11 @@ C++14 / JUCE Framework
 * * *
 **TODO:**
 
-~~Implement Oscillators~~
+Implement Oscillators
 
-~~Resizable GUI~~
+Resizable GUI
 
-~~Effects~~
+Effects
 ***
 **1.0:**
 
