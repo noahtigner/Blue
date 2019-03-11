@@ -3,6 +3,15 @@ Blue
 C++14 / JUCE Framework
 * * *
 **TODO:**
+
+~~Implement Oscillators~~
+
+~~Resizable GUI~~
+
+~~Effects~~
+***
+**1.0:**
+
 ~~GUI~~ 
 
 ~~Output Level Control~~ 
@@ -23,7 +32,4 @@ C++14 / JUCE Framework
 
 ~~Envelope (ADSR)~~
 
-~~Filter~~ 
-
-Effects... 
-	 
+~~Filters~~	 
