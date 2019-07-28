@@ -6,9 +6,8 @@ C++14 / JUCE Framework
 
 Implement Oscillators
 
-Resizable GUI
-
 Effects
+
 ***
 **1.0:**
 
