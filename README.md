@@ -1,34 +1,28 @@
-Blue
+# Blue
 
-C++14 / JUCE Framework
-* * *
-**TODO:**
+A polyphonic, MIDI capable audio synthesizer. Written with the JUCE audio framework.
 
-Implement Oscillators
+### A snapshot of the Synth
+![Screenshot](display.png)
 
-Effects
+### Use
 
-***
-**1.0:**
+Run Builds/[your environment]/build/Release/Blue
 
-~~GUI~~ 
+For information on audio synthesis, see [Sysnthesis Fundamentals courtesy of Moog](https://moogfoundation.org/learning-synthesis/synthesis-fundamentals/)
 
-~~Output Level Control~~ 
+### Development
 
-~~MIDI Capability~~ 
+Written in C++.
 
-~~Polyphony~~	 
+Dependencies: 
 
-~~Sine Waves~~ 
+* JUCE Audio Framework
 
-~~Square Waves~~
+## Author
 
-~~Saw Waves~~
+Noah Tigner
 
-~~Triangle Waves~~
+nzt@cs.uoregon.edu
 
-~~Noise~~ 
 
-~~Envelope (ADSR)~~
-
-~~Filters~~	 
