@@ -9,7 +9,7 @@ A polyphonic, MIDI capable audio synthesizer. Written with the JUCE audio framew
 
 Run Builds/[your environment]/build/Release/Blue
 
-For information on audio synthesis, see [Sysnthesis Fundamentals courtesy of Moog](https://moogfoundation.org/learning-synthesis/synthesis-fundamentals/)
+For information on audio synthesis, see [Synthesis Fundamentals courtesy of Moog](https://moogfoundation.org/learning-synthesis/synthesis-fundamentals/)
 
 ### Development
 
